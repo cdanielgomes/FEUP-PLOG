@@ -1,7 +1,7 @@
 display_board([L|T], [H|C]):-
 	length(L,Size),
 	print_horizontal_numbers(Size, 1), nl,
-	print_tab([L|T],Size,Size),
+	print_tab([L|T],Size,1),
 	print_barras(Size),
 	jogador_1(H),
 	jogador_2(C).
@@ -13,7 +13,7 @@ print_tab([L|T],Size, Counter):-
 	print_line(L,0), 
 	write('- '), 
 	write(Counter), nl,
-	Counter1 is Counter - 1,
+	Counter1 is Counter + 1,
 	print_tab(T, Size, Counter1).
 
 print_line([],_).
@@ -43,8 +43,8 @@ print_horizontal_numbers(Size, Counter):-
 	Size1 is Size - 1,
 	print_horizontal_numbers(Size1, Counter1).
 
-jogador_1(L):- L<10,nl,nl, write('Player '), print_cell(1), write(' already captured '), write(L), print_cell(2); nl,nl,L=:=10, write('Player '), print_cell(1) , write(' won').    
-jogador_2([L|_]):-L<10, nl,nl, write('Player '), print_cell(2), write(' already captured '), write(L), print_cell(1);nl,nl, L=:=10, write('Player '), print_cell(2) , write(' won').    
+jogador_1(L):- L<10,nl,nl, write('Player '), print_cell(1), write(' already captured '), write(L), print_cell(2), write('\n'); nl,nl,L=:=10, write('Player '), print_cell(1) , write(' won\n').    
+jogador_2([L|_]):-L<10, nl,nl, write('Player '), print_cell(2), write(' already captured '), write(L), print_cell(1), write('\n');nl,nl, L=:=10, write('Player '), print_cell(2) , write(' won\n').    
 
 
 
