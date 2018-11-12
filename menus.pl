@@ -25,9 +25,9 @@ mainMenu :-
 	infoMenu:- clearScreen, printMenuInfo, get_char(_) , get_char(_), mainMenu.
 	playMenu:- clearScreen, printPlayMenu, get_char(In), get_char(_),
 	(
-		In = '1' -> write('Chose to play Human vs Human\n'), hxh, playMenu;
-		In = '2' -> write('Chose to play Human vs Computer\n'), playMenu;
-		In = '3' -> write('Chose to play Computer vs Computer\n'), playMenu;
+		In = '1' -> write('Chose to play Human vs Human\n'), hxh, mainMenu;
+		In = '2' -> write('Chose to play Human vs Computer\n'), mainMenu;
+		In = '3' -> write('Chose to play Computer vs Computer\n'), mainMenu;
 		In = '4' -> write('Chose to Go back\n'), mainMenu;
 		
 		playMenu
