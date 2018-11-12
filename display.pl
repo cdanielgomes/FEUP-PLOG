@@ -1,3 +1,5 @@
+
+
 display_board([L|T], [H|C]):-
 	length(L,Size),
 	print_horizontal_numbers(Size, 1), nl,
@@ -42,6 +44,22 @@ print_horizontal_numbers(Size, Counter):-
 	Counter1 is Counter + 1,
 	Size1 is Size - 1,
 	print_horizontal_numbers(Size1, Counter1).
+
+
+
+printPenteTitle:-
+	clearScreen,
+	write('       _______  _______  _       _________ _______ '), nl,
+	write('      (  ____ )(  ____ \\( (    /|\\__   __/(  ____ \\'), nl,
+	write('      | (    )|| (    \\/|  \\  ( |   ) (   | (    \\/'), nl,
+	write('      | (____)|| (__    |   \\ | |   | |   | (__    '), nl,
+	write('      |  _____)|  __)   | (\\ \\) |   | |   |  __)   '), nl,
+	write('      | (      | (      | | \\   |   | |   | (      '), nl,
+	write('      | )      | (____/\\| )  \\  |   | |   | (____/\\ '), nl,
+	write('      |/       (_______/|/    )_)   )_(   (_______/'), nl,
+	write('                                                   '), nl.
+
+
 
 jogador_1(L):- L<10,nl,nl, write('Player '), print_cell(1), write(' already captured '), write(L), print_cell(2), write('\n'); nl,nl,L=:=10, write('Player '), print_cell(1) , write(' won\n').    
 jogador_2([L|_]):-L<10, nl,nl, write('Player '), print_cell(2), write(' already captured '), write(L), print_cell(1), write('\n');nl,nl, L=:=10, write('Player '), print_cell(2) , write(' won\n').    

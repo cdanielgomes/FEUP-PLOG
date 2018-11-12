@@ -1,26 +1,19 @@
-clearScreen :-
-	printBlank(4).
-	
-printBlank(A) :-
-	A > 0,
-	nl,
-	A1 is A - 1,
-	printBlank(A1).
-	
-printBlank(_).
 
 mainMenu :-
 	clearScreen,
+	printPenteTitle,
 	printMainMenu,
 	get_char(In),
 	(
-		In = '1' -> write('Chose to play\n'), playMenu;
-		In = '2' -> write('Chose Info\n'), infoMenu;
-		In = '3' -> write('Rules\n'), rules;
-		In = '4' -> write('Chose Exit\n');
+		In = '1' -> write('START GAME\n'), playMenu;
+		In = '2' -> write('INFO\n'), infoMenu;
+		In = '3' -> write('RULES\n'), rules;
+		In = '4' -> write('EXIT\n');
 	
 		mainMenu
 	).
+
+
 
 	infoMenu:- clearScreen, printMenuInfo, get_char(_) , get_char(_), mainMenu.
 	playMenu:- clearScreen, printPlayMenu, get_char(In), get_char(_),
@@ -34,19 +27,17 @@ mainMenu :-
 	).
 
 
-	printPlayMenu:- 
+printPlayMenu:- 
 	write('---------------------------------------------------------------\n'),
-	write('------------------------   PENTE   ----------------------------\n'),
 	write('---------------------------------------------------------------\n'),
-	write('-----                    1 - HXH                          -----\n'),
-	write('-----                    2 - HxC                          -----\n'),
-	write('-----                    3 - CxC                          -----\n'),
+	write('-----                    1 - MultiPlayer                  -----\n'),
+	write('-----                    2 - SinglePlayer                 -----\n'),
+	write('-----                    3 - Cp vs Cp                     -----\n'),
 	write('-----                    4 - Back                         -----\n'),
 	write('---------------------------------------------------------------\n').
 
 printMainMenu:- 
 	write('---------------------------------------------------------------\n'),
-	write('------------------------   PENTE   ----------------------------\n'),
 	write('---------------------------------------------------------------\n'),
 	write('-----                    1 - PLAY                         -----\n'),
 	write('-----                    2 - INFO                         -----\n'),
