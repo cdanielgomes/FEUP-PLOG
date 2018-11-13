@@ -15,10 +15,22 @@ mainMenu :-
 
 
 
-	infoMenu:- clearScreen, printMenuInfo, get_char(_) , get_char(_), mainMenu.
-	playMenu:- clearScreen, printPlayMenu, get_char(In), get_char(_),
+infoMenu:- 
+		clearScreen,
+		printPenteTitle, 
+		printMenuInfo, 
+		get_char(_), 
+		get_char(_), 
+		mainMenu.
+
+playMenu:- 
+	clearScreen,
+	printPenteTitle, 
+	printPlayMenu,
+	get_char(_),  	
+	get_char(In), 
 	(
-		In = '1' -> write('Chose to play Human vs Human\n'), hxh, playMenu;
+		In = '1' -> write('Chose to play Human vs Human\n'), startGame(playerMove, playerMove) ;
 		In = '2' -> write('Chose to play Human vs Computer\n'), playMenu;
 		In = '3' -> write('Chose to play Computer vs Computer\n'), playMenu;
 		In = '4' -> write('Chose to Go back\n'), mainMenu;
@@ -42,7 +54,7 @@ printMainMenu:-
 	write('-----                    1 - PLAY                         -----\n'),
 	write('-----                    2 - INFO                         -----\n'),
 	write('-----                    3 - RULES                        -----\n'),
-	write('-----                    4 - Back                         -----\n'),
+	write('-----                    4 - BACK                         -----\n'),
 	write('---------------------------------------------------------------\n').
 
 printMenuInfo:- write('one day\n').

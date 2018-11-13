@@ -1,5 +1,5 @@
 clearScreen :-
-	printBlank(4).
+	printBlank(7).
 	
 printBlank(A) :-
 	A > 0,
@@ -8,3 +8,5 @@ printBlank(A) :-
 	printBlank(A1).
 	
 printBlank(_).
+
+reload:- reconsult('pente.pl').
