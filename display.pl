@@ -2,48 +2,61 @@
 
 display_board([L|T], [H|C]):-
 	length(L,Size),
-	print_horizontal_numbers(Size, 1), nl,
-	print_tab([L|T],Size,1),
-	print_barras(Size),
+	write(' '),
+	print_col_id(Size, 1),nl,
+	put_code(9487),
+	print_top_Board(Size),
+	put_code(9491), nl,
+	print_Lines([L|T], Size, 1),
+	put_code(9495),
+	print_bot_Board(Size),
+	put_code(9499),
 	jogador_1(H),
 	jogador_2(C).
 
 
-print_tab([], _, _).
-print_tab([L|T],Size, Counter):-
-	print_barras(Size), nl,
-	print_line(L,0), 
-	write('- '), 
-	write(Counter), nl,
-	Counter1 is Counter + 1,
-	print_tab(T, Size, Counter1).
-
-print_line([],_).
-print_line([C|L], Counter):-
-	write('- '),
-	print_cell(C),
-	Counter1 is (Counter+1),
-	print_line(L,Counter1).
-
-print_cell(0):- write(' ').
+print_cell(0):- put_code(9547).
 print_cell(2):- put_code(9675). 
 print_cell(1):- put_code(9679). %! white
 
-
-print_barras(0).
-print_barras(Size):-
-	write('  |'),
-	Size1 is Size-1,
-	print_barras(Size1).
-
-print_horizontal_numbers(0, _).
-print_horizontal_numbers(Size, Counter):-
-	write('  '),
+print_col_id(0, _).
+print_col_id(Size, Counter):-
 	Column is 0x0040 + Counter,
 	put_code(Column),
 	Counter1 is Counter + 1,
 	Size1 is Size - 1,
-	print_horizontal_numbers(Size1, Counter1).
+	print_col_id(Size1, Counter1).
+
+
+
+
+
+print_top_Board(0).
+print_top_Board(Size):-
+	put_code(9523),
+	Size1 is Size-1,
+	print_top_Board(Size1).
+
+print_Lines([],_,_).
+print_Lines([C|L], Size, Counter):-
+	put_code(9507),
+	print_line_Board(C, Size),
+	put_code(9515), write(Counter),nl,
+	Counter2 is Counter + 1,
+	print_Lines(L, Size, Counter2).
+
+print_line_Board([],0).
+print_line_Board([C|L],Size):-
+	print_cell(C),
+	Size1 is Size -1,
+	print_line_Board(L,Size1).
+
+print_bot_Board(0).
+print_bot_Board(Size):-
+	put_code(9531),
+	Size1 is Size-1,
+	print_bot_Board(Size1).
+
 
 
 
@@ -61,8 +74,8 @@ printPenteTitle:-
 
 
 
-jogador_1(L):- L<10,nl,nl, write('Player '), print_cell(1), write(' already captured '), write(L), print_cell(2), write('\n'); nl,nl,L=:=10, write('Player '), print_cell(1) , write(' won\n').    
-jogador_2([L|_]):-L<10, nl,nl, write('Player '), print_cell(2), write(' already captured '), write(L), print_cell(1), write('\n');nl,nl, L=:=10, write('Player '), print_cell(2) , write(' won\n').    
+jogador_1(L):- L<10,nl, write('Player '), print_cell(1), write(' already captured '), write(L), print_cell(2), write('\n'); nl,nl,L=:=10, write('Player '), print_cell(1) , write(' won\n').    
+jogador_2([L|_]):-L<10, write('Player '), print_cell(2), write(' already captured '), write(L), print_cell(1), write('\n');nl,nl, L=:=10, write('Player '), print_cell(2) , write(' won\n').    
 
 
 

@@ -26,6 +26,7 @@ create_line(X, N, List)  :-
 %% List1 - Return the Board changed
 
 insertOnPositon(Line, Column, Symbol, Board, List1):-
+	checkInsertion(Line, Column, Board),
     RealLine is Line - 1,
     nth1(Line, Board, Change),
     changeElem(Column, Symbol, Change, Changed),
@@ -68,3 +69,45 @@ copy([H|T], [A|B], X):-
 copy2([H|T], [A|B], X, Contador):-
     X > Contador -> Contador1 is Contador + 1, copy2(T, [A|B], X, Contador1);
     length([H|T], N),copy([H|T], [A|B],N).
+
+%% Get the Symbol in the position (Line, Column)
+%% Line - Number of the Line
+%% Column - Number of the Column
+%% Board - Board to be Changed
+%% Symbol - Return the symbol in the position(Line, Column)
+getElemInPosition(Line, Column, Board, Symbol):-
+    nth1(Line, Board, A),
+    nth1(Column, A, Symbol). 
+
+%% fail if (Line, Column) is not a 0
+checkInsertion(Line, Column, Board):-
+    getElemInPosition(Line, Column, Board, Symbol),
+    Symbol = 0 -> true; false.
+
+
+conversion('A', 1).
+conversion('B', 2).
+conversion('C', 3).
+conversion('D', 4).
+conversion('E', 5).
+conversion('F', 6).
+conversion('G', 7).
+conversion('H', 8).
+conversion('I', 9).
+conversion('J', 10).
+conversion('K', 11).
+conversion('L', 12).
+conversion('M', 13).
+conversion('N', 14).
+conversion('O', 15).
+conversion('P', 16).
+conversion('Q', 17).
+conversion('R', 18).
+conversion('S', 19).
+conversion('T', 20).
+conversion('U', 21).
+conversion('V', 22).
+conversion('W', 23).
+conversion('X', 24).
+conversion('Y', 25).
+conversion('Z', 26).
