@@ -112,3 +112,30 @@ l:- winVertical([
     [0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0]],1).
+
+conversion('A', 1).
+conversion('B', 2).
+conversion('C', 3).
+conversion('D', 4).
+conversion('E', 5).
+conversion('F', 6).
+conversion('G', 7).
+conversion('H', 8).
+conversion('I', 9).
+conversion('J', 10).
+conversion('K', 11).
+conversion('L', 12).
+conversion('M', 13).
+conversion('N', 14).
+conversion('O', 15).
+conversion('P', 16).
+conversion('Q', 17).
+conversion('R', 18).
+conversion('S', 19).
+conversion('T', 20).
+conversion('U', 21).
+conversion('V', 22).
+conversion('W', 23).
+conversion('X', 24).
+conversion('Y', 25).
+conversion('Z', 26).
