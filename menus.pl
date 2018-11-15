@@ -2,12 +2,13 @@
 mainMenu :-
 	clearScreen,
 	printPenteTitle,
-	printMainMenu,
+	printMainMenu,	
 	get_char(In),
+	skip_line,
 	(
 		In = '1' -> write('START GAME\n'), playMenu;
-		In = '2' -> write('INFO\n'), infoMenu;
-		In = '3' -> write('RULES\n'), rules;
+		In = '2' -> write('INFO\n'), info, mainMenu;
+		In = '3' -> write('RULES\n'), rules, mainMenu;
 		In = '4' -> write('EXIT\n');
 	
 		mainMenu
@@ -15,20 +16,27 @@ mainMenu :-
 
 
 
-infoMenu:- 
-		clearScreen,
-		printPenteTitle, 
-		printMenuInfo, 
-		get_char(_), 
-		get_char(_), 
-		mainMenu.
+info:- 
+	clearScreen,
+	printPenteTitle,
+	write('---------------------------------------------------------------\n'),
+	write('---------------------------------------------------------------\n'),
+	write('-----                  PLOG  -  2018/2019                 -----\n'),
+	write('-----                                                     -----\n'),
+	write('-----                                                     -----\n'),
+	write('-----       Joao Carlos Alves - up201605236               -----\n'),
+	write('-----       Daniel Gomes      - up201603404               -----\n'),
+	write('---------------------------------------------------------------\n'),
+	getContinue.
+ 
+	
 
 playMenu:- 
 	clearScreen,
 	printPenteTitle, 
 	printPlayMenu,
-	get_char(_),  	
-	get_char(In), 
+	get_char(In),
+	skip_line, 
 	(
 		In = '1' -> write('Chose to play Human vs Human\n'), startGame(playerMove, playerMove) ;
 		In = '2' -> write('Chose to play Human vs Computer\n'), playMenu;
@@ -57,5 +65,14 @@ printMainMenu:-
 	write('-----                    4 - BACK                         -----\n'),
 	write('---------------------------------------------------------------\n').
 
-printMenuInfo:- write('one day\n').
-rules:- write('another day\n').
+rules:-
+	clearScreen,
+	printPenteTitle,
+	write('\tPente is played on a 19x19 board and the pieces are placed at the intersections of the lines, not the squares.'), nl,
+	write('\tThe objective of the game is to place 5 or more pieces consecutively on a vertical, horizontal or diagonal line, or capture at least 5 pairs of opponent\'s pieces.'), nl,
+	write('\tEach player can place one piece at any empty intersection per move.'), nl,
+	write('\tThe first move of the white has to be in the center of the board - the intersection J10.'), nl,
+	write('\tThe second white play must be made at least three intersections away from the J10 center in any direction.'), nl,
+	write('\tA player captures the opponent\'s pieces by cornering a vertical, horizontal or diagonal line of two and only two opposing pieces. The captured pieces are immediately removed from the board.\n'), nl,
+	getContinue.
+
