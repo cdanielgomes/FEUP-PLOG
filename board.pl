@@ -68,3 +68,47 @@ copy([H|T], [A|B], X):-
 copy2([H|T], [A|B], X, Contador):-
     X > Contador -> Contador1 is Contador + 1, copy2(T, [A|B], X, Contador1);
     length([H|T], N),copy([H|T], [A|B],N).
+
+
+%% win 
+
+checkFiveInLine(Line, Type):-
+    length(N, 5),
+    maplist(=(Type), N),
+    segment(Line, N).
+
+checkLines([], _).
+checkLines([H|T], Type):-
+    \+ checkFiveInLine(H, Type),
+    checkLines(T, Type).
+    
+
+%winVertical(_, A,L,_):- B is L-A, B > 0, B < L.
+winVertical(Board, Type):-
+    transpose(Board, Vertical),!,
+   checkLines(Vertical,Type).
+
+
+print_board([]).
+print_board([H|T]):-
+    print_line(H),
+    write('\n'),
+    print_board(T).
+    
+print_line([]).
+print_line([H|T]):-
+    write(H),
+    print_line(T).
+
+
+l:- winVertical([
+    [2,1,2,2,2,2,2,1,1],
+    [2,0,0,0,0,1,2,0,1],
+    [1,0,1,0,1,1,2,1,2],
+    [1,0,0,2,0,1,2,1,1],
+    [0,0,0,0,0,0,0,0,0],
+    [1,0,0,0,0,0,0,0,0],
+    [1,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0]],1).
