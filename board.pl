@@ -69,6 +69,15 @@ copy2([H|T], [A|B], X, Contador):-
     X > Contador -> Contador1 is Contador + 1, copy2(T, [A|B], X, Contador1);
     length([H|T], N),copy([H|T], [A|B],N).
 
+%% Get the Symbol in the position (Line, Column)
+%% Line - Number of the Line
+%% Column - Number of the Column
+%% Board - Board to be Changed
+%% Symbol - Return the symbol in the position(Line, Column)
+getElemInPosition(Board, Line, Column,Type):-
+    nth1(Line, Board, A),
+    nth1(Column, A, Type). 
+
 
 %% win 
 
@@ -83,10 +92,94 @@ checkLines([H|T], Type):-
     checkLines(T, Type).
     
 
-%winVertical(_, A,L,_):- B is L-A, B > 0, B < L.
+
+%% Win Game
+winGame(Board, Type):-
+    winVertical(Board, Type).
+
+winGame(Board, Type):-
+    winHorizontal(Board, Type).
+
+winGame(Board, Type):-
+    winDiagonal(Board, Type).
+%%Win Vertical
 winVertical(Board, Type):-
-    transpose(Board, Vertical),!,
-   checkLines(Vertical,Type).
+    transpose(Board, Vertical),
+    checkLines(Vertical,Type).
+
+
+computeVerticalLRUp(_, _, BS, BS, _,_).
+
+%%inc Lines
+computeVerticalLRUp(Board, L, C, BoardSize, AllDiag):-
+    lrInc(Board, L, C, List, BoardSize),
+    C1 is C+1,    
+    nth1(1, A, List),
+    append(AllDiag, A, List1),
+    computeVerticalLRUp(Board, L, C1, BoardSize, List1).
+
+lrInc(_,A, _, _, C):- C1 is C+1, A = C1.
+
+lrInc(Board,Line, Column, Diagonal, BoardSize):-
+    getElemInPosition(Board, Line,Column, Type),
+    nth1(1,C,Type),
+    append(Diagonal, C, List1),
+    NewLine is Line + 1,
+    NewColumn is Column  +1,
+    lrInc(Board, NewLine, NewColumn, List1, BoardSize).
+
+rlInc(_,0, _, B, C, B).
+rlInc(Board,Line, Column, Diagonal,BoardSize, List):-
+    getElemInPosition(Board, Line,Column, Type),
+    nth1(1,C,Type),
+    append(Diagonal, C, List1),
+    NewLine is Line - 1,
+    NewColumn is Column  - 1,
+    !,
+    rlInc(Board, NewLine, NewColumn, List1, BoardSize, List).
+
+
+/*
+%%win Horizontal
+winHorizontal(Board, Type):-
+    checkLines(Board, Type).
+
+winDiagonal(Board, Type):-
+    length(Board, BoardSize),
+    diagWinAux(Board, 1, Type, BoardSize).
+
+%Lef to rigth
+diagWinAux(Board, Column, Type, _BoardSize):-
+    diagLineWin(Board, Column, 1, 1, 1, Type, 0).
+
+%right to left
+diagWinAux(Board, Column, Type, _BoardSize):-
+    diagLineWin(Board, Column, 1, 1, -1, Type, 0).
+%Recursive Call
+diagWinAux(Board, Column, Type, BoardSize):-
+    NewColumn is (Column + 1),
+    NewColumn =< BoardSize,
+    diagWinAux(Board, NewColumn, Type, BoardSize).
+
+
+diagLineWin(_, _, _, _, _, _, Count):-
+    Count >= 5.
+
+diagLineWin(Board, Line, Column, LineInc, ColumnInc, Type, Count):-
+    getElemInPosition(Board, Line, Column, Elem),
+    Elem = Type,
+    NewLine is (Line + LineInc), NewColumn is (Column + ColumnInc),
+    NewCount is (Count + 1),
+    diagLineWin(Board, NewLine, NewColumn, LineInc, ColumnInc, Type,  NewCount).
+
+
+diagLineWin(Type, Board, Line, Column, LineInc, ColumnInc, _):-
+    getElemInPosition(Board, Line, Column, Elem),
+    NewLine is (Line + LineInc), NewColumn is (Column + ColumnInc),
+    Elem \= Type,
+    diagLineWin(Type, Board, NewLine, NewColumn, LineInc, ColumnInc, 0).
+
+*/
 
 
 print_board([]).
@@ -99,19 +192,6 @@ print_line([]).
 print_line([H|T]):-
     write(H),
     print_line(T).
-
-
-l:- winVertical([
-    [2,1,2,2,2,2,2,1,1],
-    [2,0,0,0,0,1,2,0,1],
-    [1,0,1,0,1,1,2,1,2],
-    [1,0,0,2,0,1,2,1,1],
-    [0,0,0,0,0,0,0,0,0],
-    [1,0,0,0,0,0,0,0,0],
-    [1,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0]],1).
 
 conversion('A', 1).
 conversion('B', 2).
@@ -139,3 +219,51 @@ conversion('W', 23).
 conversion('X', 24).
 conversion('Y', 25).
 conversion('Z', 26).
+
+
+
+l:- computeVerticalLRUp([
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,2,0,1,2,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,1,0,0,2,0,0,1,0,0,0,0,0,0,0,0],
+        [0,0,0,1,2,2,2,2,1,1,0,2,1,0,0,0,0,0,0],
+        [0,0,1,0,0,1,1,0,1,2,0,2,0,0,0,0,0,0,0],
+        [0,0,0,0,0,2,0,0,2,1,2,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,1,0,1,2,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,2,2,2,1,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2]	
+        ], 1, 1, 19, AllDiag), nth1(1, AllDiag, A), print_line(A).
+
+
+
+k:- lrInc([
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,2,0,1,2,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,1,0,0,2,0,0,1,0,0,0,0,0,0,0,0],
+        [0,0,0,1,2,2,2,2,1,1,0,2,1,0,0,0,0,0,0],
+        [0,0,1,0,0,1,1,0,1,2,0,2,0,0,0,0,0,0,0],
+        [0,0,0,0,0,2,0,0,2,1,2,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,1,0,1,2,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,2,2,2,1,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2]	
+        ], 2, 1,[], 19, List), print_line(List).

@@ -69,9 +69,9 @@ copy2([H|T], [A|B], X, Contador):-
 %% Column - Number of the Column
 %% Board - Board to be Changed
 %% Symbol - Return the symbol in the position(Line, Column)
-getElemInPosition(Line, Column, Board, Symbol):-
+getElemInPosition(Line, Column, Board, Type):-
     nth1(Line, Board, A),
-    nth1(Column, A, Symbol). 
+    nth1(Column, A, Type). 
 
 %% fail if (Line, Column) is not a 0
 checkInsertion(Line, Column, Board):-
