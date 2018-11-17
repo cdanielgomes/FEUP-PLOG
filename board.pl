@@ -108,7 +108,7 @@ winVertical(Board, Type):-
     checkLines(Vertical,Type).
 
 
-computeVerticalLRUp(_, _, BS, BS, _,_).
+computeVerticalLRUp(_, _, BS, BS,_).
 
 %%inc Lines
 computeVerticalLRUp(Board, L, C, BoardSize, AllDiag):-
