@@ -118,20 +118,86 @@ winVertical(Board, Type):-
 winHorizontal(Board, Type):-
     checkLines(Board, Type).
 
+
+
 %return false if someone won the game
 winDiagonal(Board, Type):-
+    winDiagonal1(Board, Type),
+    winDiagonal2(Board, Type),
+    winDiagonal3(Board, Type),
+    winDiagonal4(Board, Type).
+
+
+winDiagonal1(Board, Type):-
     length(Board, BoardSize),
-    computeLRUp(Board, 1, 1, BoardSize, AuxListLRUp, DiagonalLRUp),    
-    computeLRDown(Board, 2, 1, BoardSize, AuxListLRDown, DiagonalLRDown),
-    computeRLUp(Board, 1, BoardSize, BoardSize, AuxListRLUp, DiagonalRLUp),
-    computeRLDown(Board, 2, BoardSize, BoardSize, AuxListRLDown, DiagonalRLDown),
-    checkLines(DiagonalLRUp, Type),!,
-    checkLines(DiagonalLRDown, Type),!,
-    checkLines(DiagonalRLUp, Type),!,
-    checkLines(DiagonalRLDown, Type),!.
+    computeRLUp(Board, 1, BoardSize, BoardSize, AuxListRLUp, DiagonalRLUp),!,
+    checkLines(DiagonalRLUp, Type).
+
+winDiagonal2(Board, Type):-
+    length(Board, BoardSize),
+    computeLRUp(Board, 1, 1, BoardSize, AuxListLRUp, DiagonalLRUp),!,
+    checkLines(DiagonalLRUp, Type).
+
+winDiagonal3(Board, Type):-
+    length(Board, BoardSize),
+    computeLRDown(Board, 1, 1, BoardSize, AuxListLRDown, DiagonalLRDown),!,
+    checkLines(DiagonalLRDown, Type).
+
+winDiagonal4(Board, Type):-
+    length(Board, BoardSize),
+    computeRLDown(Board, 2, BoardSize, BoardSize, AuxListRLDown, DiagonalRLDown),!,
+    checkLines(DiagonalRLDown, Type).
+
+
+l:- winDiagonal([
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,1,0,2,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,1,0,0,0,2,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,2,0,0,0,1,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,2,0,2,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    ], 2).
+
+k:- computeLRUp([
+        [1,2,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,1,0,2,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,1,0,2,0,1,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,2,0,0,0,1,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]
+    ], 1, 1, 19, AuxListLRDown, DiagonalLRDown), checkLines(DiagonalLRDown,1).
+
+
+
 
 %%Increment Lines Left to Right
-computeLRDown(_, Line, _, BoardSize,List2, AllDiag):- Line = BoardSize, AllDiag = List2.
+computeLRDown(_, Line, _, BoardSize,List2, AllDiag):- Line =:= BoardSize - 3, AllDiag = List2.
 computeLRDown(Board, L, C, BoardSize, AllDiagTemp, AllDiag):-
     lrInc(Board, L, C, BoardSize, List, Diag),
     L1 is L + 1,   
@@ -140,7 +206,7 @@ computeLRDown(Board, L, C, BoardSize, AllDiagTemp, AllDiag):-
 
 
 %%Increment Columns Left to Right
-computeLRUp(_, _, Column, BoardSize,List2, AllDiag):- Column = BoardSize, AllDiag = List2.
+computeLRUp(_, _, Column, BoardSize, List2, AllDiag):- Column =:= BoardSize - 3, AllDiag = List2.
 computeLRUp(Board, L, C, BoardSize, AllDiagTemp, AllDiag):-
     lrInc(Board, L, C, BoardSize, List, Diag),
     C1 is C + 1,   
@@ -159,7 +225,7 @@ lrInc(Board,Line, Column, BoardSize, Diagonal, FinalDiagonal):-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%Increment Lines Right to Left
-computeRLDown(_, Line, _, BoardSize,List2, AllDiag):- Line = BoardSize, AllDiag = List2.
+computeRLDown(_, Line, _, BoardSize,List2, AllDiag):- Line =:= BoardSize - 3, AllDiag = List2.
 computeRLDown(Board, L, C, BoardSize, AllDiagTemp, AllDiag):-
     rlInc(Board, L, C, BoardSize, List, Diag),
     L1 is L + 1,   
@@ -167,7 +233,7 @@ computeRLDown(Board, L, C, BoardSize, AllDiagTemp, AllDiag):-
     computeRLDown(Board, L1, C, BoardSize, List1, AllDiag).
 
 %%Increment Columns Right to Left
-computeRLUp(_, _, Column, BoardSize,List2, AllDiag):- Column = 0, AllDiag = List2.
+computeRLUp(_, _, Column, BoardSize,List2, AllDiag):- Column = 4, AllDiag = List2.
 computeRLUp(Board, L, C, BoardSize, AllDiagTemp, AllDiag):-
     rlInc(Board, L, C, BoardSize, List, Diag),
     C1 is C - 1,   
@@ -339,52 +405,6 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     insertOnPositon(Line2, Col2, 0, BoardIntermidiate, NewBoard),
     playerEat(Result, Type, NewResult).
 
-
-
-l(A,B):- display_board([
-	[0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],%1
-	[0,0,1,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0],%2
-	[0,0,0,2,2,0,0,0,0,2,2,0,0,0,0,0,0,0,0],%3
-	[0,0,0,0,2,2,0,0,0,0,1,0,0,0,0,0,0,1,0],%4
-	[0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,2,2,0],%5
-	[0,0,0,1,2,2,0,0,0,0,0,0,0,0,0,2,2,0,0],%6
-	[0,0,0,2,2,1,0,0,0,0,0,0,0,0,0,1,0,0,0],%7
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],%8
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],%9
-	[0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0],%10
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-    ], [0,0]),
-    insertOnPositon(A,B, 1, [
-	[0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],%1
-	[0,0,1,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0],%2
-	[0,0,0,2,2,0,0,0,0,2,0,0,0,0,0,0,0,0,0],%3
-	[0,0,0,0,2,2,0,0,0,0,2,0,0,0,0,0,0,1,0],%4
-	[0,0,0,0,0,0,1,0,0,0,2,0,0,0,0,0,2,2,0],%5
-	[0,0,0,1,2,2,0,0,0,0,1,0,0,0,0,2,2,0,0],%6
-	[0,0,0,2,2,1,0,0,0,0,0,0,0,0,0,1,0,0,0],%7
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],%8
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],%9
-	[0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0],%10
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-    ],  Result),  
-    display_board(Result, [0,0]),
-    checkEat(Result, [2,2], A, B, 1, BoardR, R), print_board(BoardR). 
 changeType(1, 2).
 changeType(2, 1).
 
@@ -426,24 +446,3 @@ conversion('W', 23).
 conversion('X', 24).
 conversion('Y', 25).
 conversion('Z', 26).
-	
-k:- winGame([[0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],%1
-    [0,0,1,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0],%2
-	[0,0,0,2,2,0,0,0,0,2,0,0,0,0,0,0,0,0,0],%3
-	[0,0,0,0,2,2,0,0,0,0,2,0,0,0,0,0,0,1,0],%4
-	[0,0,0,0,0,0,1,0,0,0,2,0,0,0,0,0,2,2,0],%5
-	[0,0,0,1,2,2,0,0,0,0,1,0,0,0,0,2,2,0,0],%6
-	[0,0,0,2,2,1,0,0,0,0,0,0,0,0,0,1,0,0,0],%7
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],%8
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],%9
-	[0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0],%10
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-], 1).

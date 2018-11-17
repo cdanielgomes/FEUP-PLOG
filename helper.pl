@@ -109,4 +109,3 @@ conversion('W', 23).
 conversion('X', 24).
 conversion('Y', 25).
 conversion('Z', 26).
-l:- createEmptyBoard(19, B), insertOnPositon(1, 1, 1, B, L), display_board(L,[0,0]) .
