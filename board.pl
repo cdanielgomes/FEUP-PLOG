@@ -191,22 +191,6 @@ playerEat([H|T], Type, NewResult):-
     N is Elem2 + 2,
     append([H], [N], NewResult).
 
-%% check down and Upgrade
-checkEat(Board, Line, Column, Type, NewBoard):-
-    Line1 is Line + 1,
-    Line2 is Line + 2,
-    Line3 is Line + 3,
-    changeType(Type, Opposite),
-    getElemInPosition(Board, Line1, Column, Type1),
-    getElemInPosition(Board, Line2, Column, Type2),
-    getElemInPosition(Board, Line3, Column, Type3),
-    Type = Type3, 
-    Opposite = Type2, 
-    Opposite = Type1,
-    insertOnPositon(Line1, Column, 0, Board, BoardIntermidiate),
-    insertOnPositon(Line2, Column, 0, BoardIntermidiate, NewBoard),
-    playerEat(Result, Type, NewResult).
-
 %%check Up and upgrade
 checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     Line1 is Line - 1,
@@ -223,7 +207,21 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     insertOnPositon(Line2, Column, 0, BoardIntermidiate, NewBoard),
     playerEat(Result, Type, NewResult).
 
-
+%% check down and Upgrade
+checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
+    Line1 is Line + 1,
+    Line2 is Line + 2,
+    Line3 is Line + 3,
+    changeType(Type, Opposite),
+    getElemInPosition(Board, Line1, Column, Type1),
+    getElemInPosition(Board, Line2, Column, Type2),
+    getElemInPosition(Board, Line3, Column, Type3),
+    Type = Type3, 
+    Opposite = Type2, 
+    Opposite = Type1,
+    insertOnPositon(Line1, Column, 0, Board, BoardIntermidiate),
+    insertOnPositon(Line2, Column, 0, BoardIntermidiate, NewBoard),
+    playerEat(Result, Type, NewResult).
 
 %%check Left and upgrade
 checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
@@ -361,11 +359,11 @@ l(A,B):- display_board([
     ], [0,0]),
     insertOnPositon(A,B, 1, [
 	[0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],%1
-	[0,0,1,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0],%2
-	[0,0,0,2,2,0,0,0,0,2,2,0,0,0,0,0,0,0,0],%3
-	[0,0,0,0,2,2,0,0,0,0,1,0,0,0,0,0,0,1,0],%4
-	[0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,2,2,0],%5
-	[0,0,0,1,2,2,0,0,0,0,0,0,0,0,0,2,2,0,0],%6
+	[0,0,1,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0],%2
+	[0,0,0,2,2,0,0,0,0,2,0,0,0,0,0,0,0,0,0],%3
+	[0,0,0,0,2,2,0,0,0,0,2,0,0,0,0,0,0,1,0],%4
+	[0,0,0,0,0,0,1,0,0,0,2,0,0,0,0,0,2,2,0],%5
+	[0,0,0,1,2,2,0,0,0,0,1,0,0,0,0,2,2,0,0],%6
 	[0,0,0,2,2,1,0,0,0,0,0,0,0,0,0,1,0,0,0],%7
 	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],%8
 	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],%9
@@ -381,7 +379,7 @@ l(A,B):- display_board([
 	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     ],  Result),  
     display_board(Result, [0,0]),
-    checkEat(Result, [2,2], A, B, 1, BoardR, R),display_board(BoardR, R). 
+    checkEat(Result, [2,2], A, B, 1, BoardR, R), print_board(BoardR). 
 changeType(1, 2).
 changeType(2, 1).
 
@@ -423,4 +421,24 @@ conversion('W', 23).
 conversion('X', 24).
 conversion('Y', 25).
 conversion('Z', 26).
-
+	
+k:- winGame([[0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],%1
+    [0,0,1,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0],%2
+	[0,0,0,2,2,0,0,0,0,2,0,0,0,0,0,0,0,0,0],%3
+	[0,0,0,0,2,2,0,0,0,0,2,0,0,0,0,0,0,1,0],%4
+	[0,0,0,0,0,0,1,0,0,0,2,0,0,0,0,0,2,2,0],%5
+	[0,0,0,1,2,2,0,0,0,0,1,0,0,0,0,2,2,0,0],%6
+	[0,0,0,2,2,1,0,0,0,0,0,0,0,0,0,1,0,0,0],%7
+	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],%8
+	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],%9
+	[0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0],%10
+	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0],
+	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+], 1).

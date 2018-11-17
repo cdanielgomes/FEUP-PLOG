@@ -76,7 +76,7 @@ getElemInPosition(Line, Column, Board, Type):-
 %% fail if (Line, Column) is not a 0
 checkInsertion(Line, Column, Board):-
     getElemInPosition(Line, Column, Board, Symbol),
-    Symbol = 0 -> true; false.
+    Symbol = 0.
 
 %% Replace the piece in (Line, Column) for 0
 removePiece(Line, Column, Board, NewBoard):-
