@@ -3,6 +3,7 @@
 :-include('utilities.pl').
 :-include('board.pl').
 :-include('input.pl').
+:-include('cp.pl').
 
 pente:-
 	mainMenu.
