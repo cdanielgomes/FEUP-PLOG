@@ -27,6 +27,7 @@ create_line(X, N, List)  :-
 %% List1 - Return the Board changed
 
 insertOnPositon(Line, Column, Symbol, Board, List1):-
+    checkInsertion(Line, Column, Board),
     RealLine is Line - 1,
     nth1(Line, Board, Change),
     changeElem(Column, Symbol, Change, Changed),
@@ -79,8 +80,12 @@ getElemInPosition(Board, Line, Column,Type):-
     nth1(Line, Board, A),
     nth1(Column, A, Type). 
 
+%% fail if (Line, Column) is not a 0
+checkInsertion(Line, Column, Board):-
+    getElemInPosition(Board, Line, Column, Symbol),
+    Symbol = 0 -> true; false.
 
-%% win 
+
 
 checkFiveInLine(Line, Type):-
     length(N, 5),
@@ -96,13 +101,13 @@ checkLines([H|T], Type):-
 
 %% Win Game
 winGame(Board, Type):-
-    winVertical(Board, Type).
+   \+ winVertical(Board, Type).
 
 winGame(Board, Type):-
-    winHorizontal(Board, Type).
+   \+ winHorizontal(Board, Type).
 
 winGame(Board, Type):-
-    winDiagonal(Board, Type).
+   \+ winDiagonal(Board, Type).
 
 %%Win Vertical
 winVertical(Board, Type):-

@@ -72,6 +72,16 @@ printPenteTitle:-
 	write('      |/       (_______/|/    )_)   )_(   (_______/'), nl,
 	write('                                                   '), nl.
 
+won(Type):-
+	printWon(Type).
+
+printWon(2):-
+	nl, write('\t'), put_code(9711) , write('\tWON THE GAME !!!\n').
+
+printWon(1):-
+	nl, write('\t'), put_code(11044) , write('\tWON THE GAME !!!\n').
+
+
 
 
 jogador_1(L):- L<10,nl, write('Player '), print_cell(1), write(' already captured '), write(L), print_cell(2), write('\n'); nl,nl,L=:=10, write('Player '), print_cell(1) , write(' won\n').    

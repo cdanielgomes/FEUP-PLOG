@@ -16,20 +16,35 @@ startGame(P1, P2):-
 
 
 %black player turn
-game(P1, P2, 1, Board):-
-	nl,print_cell(1) , write(' Playing...\n'),
-	call(playerMove, 1, Board, NewBoard),
+game(P1, P2, Type, Board):-
+	Type is 1,
+	nl,print_cell(Type) , write(' Playing...\n'),
+	call(P1, Type, Board, NewBoard),
 	display_board(NewBoard, [0,0]),
-	game(P1, P2, 2, NewBoard).
+	nextMove(P1, P2, Type, NewBoard).
 
 %white player turn
-game(P1, P2, 2, Board):-
-	nl,print_cell(2) , write(' Playing...\n'),
-	call(playerMove, 2, Board, NewBoard),
+game(P1, P2, Type, Board):-
+	nl,print_cell(Type) , write(' Playing...\n'),
+	call(P2, Type, Board, NewBoard),
 	display_board(NewBoard, [0,0]),
-	game(P1, P2, 1, NewBoard).
-
+	nextMove(P1, P2, Type, NewBoard).
 
 playerMove(Type, Board, NewBoard):-
 	inputPiece(Type, Board, NewBoard).
 
+
+nextMove(_P1, _P2, Type, Board):-
+	winGame(Board, Type), ! ,
+	victory(Type).
+
+nextMove(P1, P2, Type, Board):-
+	changeType(Type, NewType), !,
+	game(P1, P2, NewType, Board).
+
+
+victory(Type):-
+	won(Type),
+	get_char(_),
+	getContinue ,!,
+	mainMenu.

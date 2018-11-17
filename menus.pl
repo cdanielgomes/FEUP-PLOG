@@ -39,12 +39,29 @@ playMenu:-
 	skip_line, 
 	(
 		In = '1' -> write('Chose to play Human vs Human\n'), startGame(playerMove, playerMove) ;
-		In = '2' -> write('Chose to play Human vs Computer\n'), playMenu;
+		In = '2' -> write('Chose to play Human vs Computer\n'), select_CP_Type(CP),!, startGame(playerMove, CP);
 		In = '3' -> write('Chose to play Computer vs Computer\n'), playMenu;
 		In = '4' -> write('Chose to Go back\n'), mainMenu;
 		
 		playMenu
 	).
+
+select_CP_Type(CP):-
+	clearScreen,
+	printPenteTitle,
+	printCPSelection,
+	read(Option),
+	integer(Option),
+	skip_line,
+	cpType(Option, CP), !.
+
+cpType(1, 'randomMove').
+cpType(2, 'bestMove').
+cpType(_, CP):-
+	write('INVALID OPTION - PLEASE TRY AGAIN\n\n'),
+	select_CP_Type(CP).
+
+
 
 
 printPlayMenu:- 
@@ -63,6 +80,15 @@ printMainMenu:-
 	write('-----                    2 - INFO                         -----\n'),
 	write('-----                    3 - RULES                        -----\n'),
 	write('-----                    4 - BACK                         -----\n'),
+	write('---------------------------------------------------------------\n').
+
+printCPSelection:- 
+	write('---------------------------------------------------------------\n'),
+	write('-----                 Select CP difficulty                -----\n'),
+	write('---------------------------------------------------------------\n'),
+	write('---------------------------------------------------------------\n'),
+	write('-----                    1 - RANDOM                       -----\n'),
+	write('-----                    2 - BEST PLAY                    -----\n'),
 	write('---------------------------------------------------------------\n').
 
 rules:-

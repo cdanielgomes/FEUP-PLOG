@@ -1,6 +1,7 @@
 inputPiece(Type, Board, NewBoard):-
 	selectPosition(PieceRow, PieceCol),
 	insertOnPositon(PieceRow, PieceCol, Type, Board, NewBoard).
+	
 
 inputPiece(Type, Board, NewBoard):-
 

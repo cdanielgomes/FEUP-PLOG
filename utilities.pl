@@ -9,4 +9,7 @@ printBlank(A) :-
 	
 printBlank(_).
 
+changeType(1, 2).
+changeType(2, 1).
+
 reload:- reconsult('pente.pl').
