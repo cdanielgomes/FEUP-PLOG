@@ -88,7 +88,7 @@ checkFiveInLine(Line, Type):-
 
 checkLines([], _).
 checkLines([H|T], Type):-
-    \+ checkFiveInLine(H, Type),
+    \+ checkFiveInLine(H, Type), %% false if found a five sequence
     checkLines(T, Type).
     
 
@@ -107,43 +107,74 @@ winVertical(Board, Type):-
     transpose(Board, Vertical),
     checkLines(Vertical,Type).
 
-
-computeVerticalLRUp(_, _, BS, BS,_).
-
-%%inc Lines
-computeVerticalLRUp(Board, L, C, BoardSize, AllDiag):-
-    lrInc(Board, L, C, List, BoardSize),
-    C1 is C+1,    
-    nth1(1, A, List),
-    append(AllDiag, A, List1),
-    computeVerticalLRUp(Board, L, C1, BoardSize, List1).
-
-lrInc(_,A, _, _, C):- C1 is C+1, A = C1.
-
-lrInc(Board,Line, Column, Diagonal, BoardSize):-
-    getElemInPosition(Board, Line,Column, Type),
-    nth1(1,C,Type),
-    append(Diagonal, C, List1),
-    NewLine is Line + 1,
-    NewColumn is Column  +1,
-    lrInc(Board, NewLine, NewColumn, List1, BoardSize).
-
-rlInc(_,0, _, B, C, B).
-rlInc(Board,Line, Column, Diagonal,BoardSize, List):-
-    getElemInPosition(Board, Line,Column, Type),
-    nth1(1,C,Type),
-    append(Diagonal, C, List1),
-    NewLine is Line - 1,
-    NewColumn is Column  - 1,
-    !,
-    rlInc(Board, NewLine, NewColumn, List1, BoardSize, List).
-
-
-/*
 %%win Horizontal
 winHorizontal(Board, Type):-
     checkLines(Board, Type).
 
+winDiagonal(Board, Type):-
+    length(Board, BoardSize),
+    computeLRUp(Board, 1, 1, BoardSize, AuxListLRUp, DiagonalLRUp),    
+    computeLRDown(Board, 2, 1, BoardSize, AuxListLRDown, DiagonalLRDown),
+    computeRLUp(Board, 1, BoardSize, BoardSize, AuxListRLUp, DiagonalRLUp),
+    computeRLDown(Board, 2, BoardSize, BoardSize, AuxListRLDown, DiagonalRLDown),
+    checkLines(DiagonalLRUp, Type),!,
+    checkLines(DiagonalLRDown, Type),!,
+    checkLines(DiagonalRLUp, Type),!,
+    checkLines(DiagonalRLDown, Type),!.
+
+%%Increment Lines Left to Right
+computeLRDown(_, Line, _, BoardSize,List2, AllDiag):- Line = BoardSize, AllDiag = List2.
+computeLRDown(Board, L, C, BoardSize, AllDiagTemp, AllDiag):-
+    lrInc(Board, L, C, BoardSize, List, Diag),
+    L1 is L + 1,   
+    append(AllDiagTemp, [Diag], List1),
+    computeLRDown(Board, L1, C, BoardSize, List1, AllDiag).
+
+
+%%Increment Columns Left to Right
+computeLRUp(_, _, Column, BoardSize,List2, AllDiag):- Column = BoardSize, AllDiag = List2.
+computeLRUp(Board, L, C, BoardSize, AllDiagTemp, AllDiag):-
+    lrInc(Board, L, C, BoardSize, List, Diag),
+    C1 is C + 1,   
+    append(AllDiagTemp, [Diag], List1),
+    computeLRUp(Board, L, C1, BoardSize, List1, AllDiag).
+
+lrInc(_, _, Column, BoardSize, List2, FinalDiagonal):- C1 is Column - 1, BoardSize = C1, FinalDiagonal=List2.
+lrInc(_, Line, _, BoardSize, List2, FinalDiagonal):- L1 is Line - 1, BoardSize = L1, FinalDiagonal=List2.
+lrInc(Board,Line, Column, BoardSize, Diagonal, FinalDiagonal):-
+    getElemInPosition(Board, Line, Column, Type),
+    append(Diagonal, [Type], List1),
+    NewLine is Line + 1,
+    NewColumn is Column  + 1,
+    lrInc(Board, NewLine, NewColumn, BoardSize, List1, FinalDiagonal).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%Increment Lines Right to Left
+computeRLDown(_, Line, _, BoardSize,List2, AllDiag):- Line = BoardSize, AllDiag = List2.
+computeRLDown(Board, L, C, BoardSize, AllDiagTemp, AllDiag):-
+    rlInc(Board, L, C, BoardSize, List, Diag),
+    L1 is L + 1,   
+    append(AllDiagTemp, [Diag], List1),
+    computeRLDown(Board, L1, C, BoardSize, List1, AllDiag).
+
+%%Increment Columns Right to Left
+computeRLUp(_, _, Column, BoardSize,List2, AllDiag):- Column = 0, AllDiag = List2.
+computeRLUp(Board, L, C, BoardSize, AllDiagTemp, AllDiag):-
+    rlInc(Board, L, C, BoardSize, List, Diag),
+    C1 is C - 1,   
+    append(AllDiagTemp, [Diag], List1),
+    computeRLUp(Board, L, C1, BoardSize, List1, AllDiag).
+
+rlInc(_, _, Column, _, List2, FinalDiagonal):- 0 = Column, FinalDiagonal=List2.
+rlInc(_, Line, _, BoardSize, List2, FinalDiagonal):- L1 is Line - 1, BoardSize = L1, FinalDiagonal=List2.
+rlInc(Board,Line, Column, BoardSize, Diagonal, FinalDiagonal):-
+    getElemInPosition(Board, Line, Column, Type),
+    append(Diagonal, [Type], List1),
+    NewLine is Line + 1,
+    NewColumn is Column  - 1,
+    rlInc(Board, NewLine, NewColumn, BoardSize, List1, FinalDiagonal).
+/*
 winDiagonal(Board, Type):-
     length(Board, BoardSize),
     diagWinAux(Board, 1, Type, BoardSize).
@@ -221,49 +252,3 @@ conversion('Y', 25).
 conversion('Z', 26).
 
 
-
-l:- computeVerticalLRUp([
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,2,0,1,2,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,1,0,0,2,0,0,1,0,0,0,0,0,0,0,0],
-        [0,0,0,1,2,2,2,2,1,1,0,2,1,0,0,0,0,0,0],
-        [0,0,1,0,0,1,1,0,1,2,0,2,0,0,0,0,0,0,0],
-        [0,0,0,0,0,2,0,0,2,1,2,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,1,0,1,2,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,2,2,2,1,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2]	
-        ], 1, 1, 19, AllDiag), nth1(1, AllDiag, A), print_line(A).
-
-
-
-k:- lrInc([
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,2,0,1,2,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,1,0,0,2,0,0,1,0,0,0,0,0,0,0,0],
-        [0,0,0,1,2,2,2,2,1,1,0,2,1,0,0,0,0,0,0],
-        [0,0,1,0,0,1,1,0,1,2,0,2,0,0,0,0,0,0,0],
-        [0,0,0,0,0,2,0,0,2,1,2,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,1,0,1,2,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,2,2,2,1,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2]	
-        ], 2, 1,[], 19, List), print_line(List).
