@@ -1,5 +1,6 @@
 :- use_module(library(random)).
 :- use_module(library(lists)).
+:- include('display.pl').
 
 %% Size = Size of the Board
 %% Board - return of the board
@@ -102,15 +103,17 @@ winGame(Board, Type):-
 
 winGame(Board, Type):-
     winDiagonal(Board, Type).
+
 %%Win Vertical
 winVertical(Board, Type):-
     transpose(Board, Vertical),
     checkLines(Vertical,Type).
 
-%%win Horizontal
+%%win Horizontal %% return false if game is won
 winHorizontal(Board, Type):-
     checkLines(Board, Type).
 
+%return false if someone won the game
 winDiagonal(Board, Type):-
     length(Board, BoardSize),
     computeLRUp(Board, 1, 1, BoardSize, AuxListLRUp, DiagonalLRUp),    
@@ -174,43 +177,190 @@ rlInc(Board,Line, Column, BoardSize, Diagonal, FinalDiagonal):-
     NewLine is Line + 1,
     NewColumn is Column  - 1,
     rlInc(Board, NewLine, NewColumn, BoardSize, List1, FinalDiagonal).
-/*
-winDiagonal(Board, Type):-
-    length(Board, BoardSize),
-    diagWinAux(Board, 1, Type, BoardSize).
-
-%Lef to rigth
-diagWinAux(Board, Column, Type, _BoardSize):-
-    diagLineWin(Board, Column, 1, 1, 1, Type, 0).
-
-%right to left
-diagWinAux(Board, Column, Type, _BoardSize):-
-    diagLineWin(Board, Column, 1, 1, -1, Type, 0).
-%Recursive Call
-diagWinAux(Board, Column, Type, BoardSize):-
-    NewColumn is (Column + 1),
-    NewColumn =< BoardSize,
-    diagWinAux(Board, NewColumn, Type, BoardSize).
 
 
-diagLineWin(_, _, _, _, _, _, Count):-
-    Count >= 5.
+playerEat([H|T], Type, NewResult):-
+    Type = 1,
+    nth1(Type, [H|T], Elem),
+    N is Elem + 2, 
+    append([N], T, NewResult).
 
-diagLineWin(Board, Line, Column, LineInc, ColumnInc, Type, Count):-
-    getElemInPosition(Board, Line, Column, Elem),
-    Elem = Type,
-    NewLine is (Line + LineInc), NewColumn is (Column + ColumnInc),
-    NewCount is (Count + 1),
-    diagLineWin(Board, NewLine, NewColumn, LineInc, ColumnInc, Type,  NewCount).
+playerEat([H|T], Type, NewResult):-
+    nth1(Type, [H|T], Elem),
+    nth1(1, Elem2),
+    N is Elem2 + 2,
+    append([H], [N], NewResult).
+
+%% check down and Upgrade
+checkEat(Board, Line, Column, Type, NewBoard):-
+    Line1 is Line + 1,
+    Line2 is Line + 2,
+    Line3 is Line + 3,
+    changeType(Type, Opposite),
+    getElemInPosition(Board, Line1, Column, Type1),
+    getElemInPosition(Board, Line2, Column, Type2),
+    getElemInPosition(Board, Line3, Column, Type3),
+    Type = Type3, 
+    Opposite = Type2, 
+    Opposite = Type1,
+    insertOnPositon(Line1, Column, 0, Board, BoardIntermidiate),
+    insertOnPositon(Line2, Column, 0, BoardIntermidiate, NewBoard),
+    playerEat(Result, Type, NewResult).
+
+%%check Up and upgrade
+checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
+    Line1 is Line - 1,
+    Line2 is Line - 2,
+    Line3 is Line - 3,
+    changeType(Type, Opposite),
+    getElemInPosition(Board, Line1, Column, Type1),
+    getElemInPosition(Board, Line2, Column, Type2),
+    getElemInPosition(Board, Line3, Column, Type3),
+    Type = Type3, 
+    Opposite = Type2, 
+    Opposite = Type1,
+    insertOnPositon(Line1, Column, 0, Board, BoardIntermidiate),
+    insertOnPositon(Line2, Column, 0, BoardIntermidiate, NewBoard),
+    playerEat(Result, Type, NewResult).
 
 
-diagLineWin(Type, Board, Line, Column, LineInc, ColumnInc, _):-
-    getElemInPosition(Board, Line, Column, Elem),
-    NewLine is (Line + LineInc), NewColumn is (Column + ColumnInc),
-    Elem \= Type,
-    diagLineWin(Type, Board, NewLine, NewColumn, LineInc, ColumnInc, 0).
 
-*/
+%%check Left and upgrade
+checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
+    Col1 is Column - 1,
+    Col2 is Column - 2,
+    Col3 is Column - 3,
+    changeType(Type, Opposite),
+    getElemInPosition(Board, Line, Col1, Type1),
+    getElemInPosition(Board, Line, Col2, Type2),
+    getElemInPosition(Board, Line, Col3, Type3),
+    Type = Type3, 
+    Opposite = Type2, 
+    Opposite = Type1,
+    insertOnPositon(Line, Col1, 0, Board, BoardIntermidiate),
+    insertOnPositon(Line, Col2, 0, BoardIntermidiate, NewBoard),
+    playerEat(Result, Type, NewResult).
+
+%%check right and upgrade
+checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
+    Col1 is Column + 1,
+    Col2 is Column + 2,
+    Col3 is Column + 3,
+    changeType(Type, Opposite),
+    getElemInPosition(Board, Line, Col1, Type1),
+    getElemInPosition(Board, Line, Col2, Type2),
+    getElemInPosition(Board, Line, Col3, Type3),
+    Type = Type3, 
+    Opposite = Type2, 
+    Opposite = Type1,
+    insertOnPositon(Line, Col1, 0, Board, BoardIntermidiate),
+    insertOnPositon(Line, Col2, 0, BoardIntermidiate, NewBoard),
+    playerEat(Result, Type, NewResult).
+
+% check Diagonal Left Up and update
+checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
+    Col1 is Column - 1,
+    Col2 is Column - 2,
+    Col3 is Column - 3,
+    Line1 is Line - 1,
+    Line2 is Line - 2,
+    Line3 is Line - 3,
+    changeType(Type, Opposite),
+    getElemInPosition(Board, Line1, Col1, Type1),
+    getElemInPosition(Board, Line2, Col2, Type2),
+    getElemInPosition(Board, Line3, Col3, Type3),
+    Type = Type3, 
+    Opposite = Type2, 
+    Opposite = Type1,
+    insertOnPositon(Line1, Col1, 0, Board, BoardIntermidiate),
+    insertOnPositon(Line2, Col2, 0, BoardIntermidiate, NewBoard),
+    playerEat(Result, Type, NewResult).
+%%%%%%%%%%%%%
+
+% check Diagonal Left Down and update
+checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
+    Col1 is Column - 1,
+    Col2 is Column - 2,
+    Col3 is Column - 3,
+    Line1 is Line + 1,
+    Line2 is Line + 2,
+    Line3 is Line + 3,
+    changeType(Type, Opposite),
+    getElemInPosition(Board, Line1, Col1, Type1),
+    getElemInPosition(Board, Line2, Col2, Type2),
+    getElemInPosition(Board, Line3, Col3, Type3),
+    Type = Type3, 
+    Opposite = Type2, 
+    Opposite = Type1,
+    insertOnPositon(Line1, Col1, 0, Board, BoardIntermidiate),
+    insertOnPositon(Line2, Col2, 0, BoardIntermidiate, NewBoard),
+    playerEat(Result, Type, NewResult).
+
+
+% check Diagonal right Up and update
+checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
+    Col1 is Column + 1,
+    Col2 is Column + 2,
+    Col3 is Column + 3,
+    Line1 is Line - 1,
+    Line2 is Line - 2,
+    Line3 is Line - 3,
+    changeType(Type, Opposite),
+    getElemInPosition(Board, Line1, Col1, Type1),
+    getElemInPosition(Board, Line2, Col2, Type2),
+    getElemInPosition(Board, Line3, Col3, Type3),
+    Type = Type3, 
+    Opposite = Type2, 
+    Opposite = Type1,
+    insertOnPositon(Line1, Col1, 0, Board, BoardIntermidiate),
+    insertOnPositon(Line2, Col2, 0, BoardIntermidiate, NewBoard),
+    playerEat(Result, Type, NewResult).
+
+
+% check Diagonal right down and update
+checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
+    Col1 is Column + 1,
+    Col2 is Column + 2,
+    Col3 is Column + 3,
+    Line1 is Line + 1,
+    Line2 is Line + 2,
+    Line3 is Line + 3,
+    changeType(Type, Opposite),
+    getElemInPosition(Board, Line1, Col1, Type1),
+    getElemInPosition(Board, Line2, Col2, Type2),
+    getElemInPosition(Board, Line3, Col3, Type3),
+    Type = Type3, 
+    Opposite = Type2, 
+    Opposite = Type1,
+    insertOnPositon(Line1, Col1, 0, Board, BoardIntermidiate),
+    insertOnPositon(Line2, Col2, 0, BoardIntermidiate, NewBoard),
+    playerEat(Result, Type, NewResult).
+
+
+
+l:- checkEat([
+        [0,2,2,1,0,0,0,2,2,1,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,2,0,1,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
+        [0,0,0,1,2,2,2,2,1,1,0,2,0,0,0,0,0,0,0],
+        [0,0,1,0,0,1,1,0,1,2,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,2,0,0,2,2,1,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,1,0,1,2,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,2,2,2,1,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]	
+        ], [2,2], 1, 1, 1, BoardR, R), display_board(BoardR, R). 
+changeType(1, 2).
+changeType(2, 1).
 
 
 print_board([]).
@@ -250,5 +400,4 @@ conversion('W', 23).
 conversion('X', 24).
 conversion('Y', 25).
 conversion('Z', 26).
-
 
