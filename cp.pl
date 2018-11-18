@@ -6,11 +6,12 @@
 % +Type - who is playing
 % +Board - current Board
 % -NewBoard - Board with  the new game state 
-randomMove(Type, Board, NewBoard):-
+randomMove(Type, Board, NewBoard, Result, NewResult):-
 	choose_move(Board, 1, Move, 1), 
 	nth1(1, Move, R, C1),
 	nth1(1, C1, C),
-	insertOnPositon(R, C, Type, Board, NewBoard).
+	checkEat(Board, Result, R, C, Type, MidBoard, NewResult),
+	insertOnPositon(R, C, Type, MidBoard, NewBoard).
 
 % List with possible moves in the current Board Game
 % -Board - Current Board game
