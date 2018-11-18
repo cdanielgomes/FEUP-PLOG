@@ -40,11 +40,31 @@ playMenu:-
 	(
 		In = '1' -> write('Chose to play Human vs Human\n'), startGame(playerMove, playerMove) ;
 		In = '2' -> write('Chose to play Human vs Computer\n'), select_CP_Type(CP),!, startGame(playerMove, CP);
-		In = '3' -> write('Chose to play Computer vs Computer\n'), playMenu;
+		In = '3' -> write('Chose to play Computer vs Computer\n'), select_CP_Type(CP),!, startGame(playerMove, CP), playMenu;
 		In = '4' -> write('Chose to Go back\n'), mainMenu;
 		
 		playMenu
 	).
+
+blackWhite:-
+	clearScreen,
+	printPenteTitle, 
+	printBlackWhite,
+	get_char(In),
+	skip_line,
+	(
+		In = '1' -> write('Chose to play Black\n'), startGame(playerMove, playerMove) ;
+		In = '2' -> write('Chose to play White\n'),!, startGame(playerMove, CP);
+	).
+	
+
+
+printBlackWhite:-
+	write('---------------------------------------------------------------\n'),
+	write('---------------------------------------------------------------\n'),
+	write('-----                    1 - Black                        -----\n'),
+	write('-----                    2 - White                        -----\n'),
+	write('---------------------------------------------------------------\n').
 
 select_CP_Type(CP):-
 	clearScreen,
