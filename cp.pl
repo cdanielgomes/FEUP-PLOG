@@ -47,12 +47,11 @@ findMyPieces(Board, Type):-
 	
 
 
-
-
+/*
 findSequence(Line, Type):-
 	findall(possibleSequences(Type, Sequence),
 	segment(Line, Sequence).
-
+*/
 cp_move(Board, 2, Move, Type).
 
 possibleSequences(N, Sequence):- Sequence = [0, N, N, N, N].
