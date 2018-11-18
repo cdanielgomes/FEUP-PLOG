@@ -43,5 +43,6 @@ possibleSequences(N, Sequence):- Sequence = [0, N, N].
 possibleSequences(N, Sequence):- Sequence = [N, N, 0]. 
 possibleSequences(N, Sequence):- Sequence = [0, N].
 possibleSequences(N, Sequence):- Sequence = [N, 0]. 
+%possibleSequences(N, Sequence):- 
 
 %bestMove:-
