@@ -39,6 +39,10 @@ nextMove(_P1, _P2, Type, Board, Result):-
 	winGame(Board, Type), ! ,
 	victory(Type).
 
+nextMove(_P1, _P2, Type, Board, Result):-
+	winByPieces(Result, Type),
+	victory(Type).
+
 nextMove(P1, P2, Type, Board, Result):-
 	changeType(Type, NewType), !,
 	game(P1, P2, NewType, Board, Result).
@@ -49,4 +53,6 @@ victory(Type):-
 	get_char(_),
 	getContinue ,!,
 	mainMenu.
+
+
 

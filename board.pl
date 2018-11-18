@@ -1,6 +1,5 @@
 :- use_module(library(random)).
 :- use_module(library(lists)).
-:- include('display.pl').
 
 %% Size = Size of the Board
 %% Board - return of the board
@@ -377,6 +376,15 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
 changeType(1, 2).
 changeType(2, 1).
 
+winByPieces([B|_], 1):-
+    integer(B),
+    B >= 10.
+
+winByPieces([_|W], 2):-
+    integer(W),
+    W >= 10.
+
+
 
 print_board([]).
 print_board([H|T]):-
@@ -415,3 +423,5 @@ conversion('W', 23).
 conversion('X', 24).
 conversion('Y', 25).
 conversion('Z', 26).
+
+
