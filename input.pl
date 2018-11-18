@@ -1,6 +1,7 @@
-inputPiece(Type, Board, NewBoard):-
+inputPiece(Type, Board, NewBoard, Result, NewResult):-
 	selectPosition(PieceRow, PieceCol),
-	insertOnPositon(PieceRow, PieceCol, Type, Board, NewBoard).
+	insertOnPositon(PieceRow, PieceCol, Type, Board, MidBoard),
+	checkEat(MidBoard, Result, PieceRow, PieceCol, Type, NewBoard, NewResult).
 
 
 inputPiece(Type, Board, NewBoard):-

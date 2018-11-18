@@ -37,6 +37,16 @@ insertOnPositon(Line, Column, Symbol, Board, List1):-
     append(TempList, [H|T], FH),
     append(FH, HalfBoard, List1).
 
+forceInsert(Line, Column, Symbol, Board, List1):-
+    RealLine is Line - 1,
+    nth1(Line, Board, Change),
+    changeElem(Column, Symbol, Change, Changed),
+    nth0(0,[H|T], Changed),
+    copy(Board, TempList, RealLine), 
+    copy2(Board, HalfBoard, Line, 0), 
+    append(TempList, [H|T], FH),
+    append(FH, HalfBoard, List1).
+
 %% caso base
 changeElem(_ , _, [], _). 
 
@@ -225,8 +235,8 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     Type = Type3, 
     Opposite = Type2, 
     Opposite = Type1,
-    insertOnPositon(Line1, Column, 0, Board, BoardIntermidiate),
-    insertOnPositon(Line2, Column, 0, BoardIntermidiate, NewBoard),
+    forceInsert(Line1, Column, 0, Board, BoardIntermidiate),
+    forceInsert(Line2, Column, 0, BoardIntermidiate, NewBoard),
     playerEat(Result, Type, NewResult).
 
 %% check down and Upgrade
@@ -241,8 +251,8 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     Type = Type3, 
     Opposite = Type2, 
     Opposite = Type1,
-    insertOnPositon(Line1, Column, 0, Board, BoardIntermidiate),
-    insertOnPositon(Line2, Column, 0, BoardIntermidiate, NewBoard),
+    forceInsert(Line1, Column, 0, Board, BoardIntermidiate),
+    forceInsert(Line2, Column, 0, BoardIntermidiate, NewBoard),
     playerEat(Result, Type, NewResult).
 
 %%check Left and upgrade
@@ -257,8 +267,8 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     Type = Type3, 
     Opposite = Type2, 
     Opposite = Type1,
-    insertOnPositon(Line, Col1, 0, Board, BoardIntermidiate),
-    insertOnPositon(Line, Col2, 0, BoardIntermidiate, NewBoard),
+    forceInsert(Line, Col1, 0, Board, BoardIntermidiate),
+    forceInsert(Line, Col2, 0, BoardIntermidiate, NewBoard),
     playerEat(Result, Type, NewResult).
 
 %%check right and upgrade
@@ -273,8 +283,8 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     Type = Type3, 
     Opposite = Type2, 
     Opposite = Type1,
-    insertOnPositon(Line, Col1, 0, Board, BoardIntermidiate),
-    insertOnPositon(Line, Col2, 0, BoardIntermidiate, NewBoard),
+    forceInsert(Line, Col1, 0, Board, BoardIntermidiate),
+    forceInsert(Line, Col2, 0, BoardIntermidiate, NewBoard),
     playerEat(Result, Type, NewResult).
 
 % check Diagonal Left Up and update
@@ -292,8 +302,8 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     Type = Type3, 
     Opposite = Type2, 
     Opposite = Type1,
-    insertOnPositon(Line1, Col1, 0, Board, BoardIntermidiate),
-    insertOnPositon(Line2, Col2, 0, BoardIntermidiate, NewBoard),
+    forceInsert(Line1, Col1, 0, Board, BoardIntermidiate),
+    forceInsert(Line2, Col2, 0, BoardIntermidiate, NewBoard),
     playerEat(Result, Type, NewResult).
 %%%%%%%%%%%%%
 
@@ -312,8 +322,8 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     Type = Type3, 
     Opposite = Type2, 
     Opposite = Type1,
-    insertOnPositon(Line1, Col1, 0, Board, BoardIntermidiate),
-    insertOnPositon(Line2, Col2, 0, BoardIntermidiate, NewBoard),
+    forceInsert(Line1, Col1, 0, Board, BoardIntermidiate),
+    forceInsert(Line2, Col2, 0, BoardIntermidiate, NewBoard),
     playerEat(Result, Type, NewResult).
 
 
@@ -332,8 +342,8 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     Type = Type3, 
     Opposite = Type2, 
     Opposite = Type1,
-    insertOnPositon(Line1, Col1, 0, Board, BoardIntermidiate),
-    insertOnPositon(Line2, Col2, 0, BoardIntermidiate, NewBoard),
+    forceInsert(Line1, Col1, 0, Board, BoardIntermidiate),
+    forceInsert(Line2, Col2, 0, BoardIntermidiate, NewBoard),
     playerEat(Result, Type, NewResult).
 
 
@@ -352,8 +362,8 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     Type = Type3, 
     Opposite = Type2, 
     Opposite = Type1,
-    insertOnPositon(Line1, Col1, 0, Board, BoardIntermidiate),
-    insertOnPositon(Line2, Col2, 0, BoardIntermidiate, NewBoard),
+    forceInsert(Line1, Col1, 0, Board, BoardIntermidiate),
+    forceInsert(Line2, Col2, 0, BoardIntermidiate, NewBoard),
     playerEat(Result, Type, NewResult).
 
 changeType(1, 2).
