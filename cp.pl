@@ -2,49 +2,50 @@
 :- include('board.pl').
 
 
-
+% Update Board with a new random play
+% +Type - who is playing
+% +Board - current Board
+% -NewBoard - Board with  the new game state 
 randomMove(Type, Board, NewBoard):-
-	length(Board, N),
-	N1 is N +1,
-	random(1, N1, R),
-	random(1, N1, C),
+	choose_move(Board, 1, Move, 1), 
+	nth1(1, Move, R, C1),
+	nth1(1, C1, C),
 	insertOnPositon(R, C, Type, Board, NewBoard).
 
-
-randomMove(Type, Board, NewBoard):-
-	randomMove(Type, Board, NewBoard).
-
-
-
-/*	
-getPlays(_, L, L, Plays, AuxPlay):- Plays = AuxPlay.
-
-getPlays(Board, Line, Column, Plays, AuxPlay):-
-	getElemInPosition(Board, Line, Column, Type), 
-	Type = 0,
-	append(Plays, [Line, Column], Play),
-	NL is Line +1, 		
-	getIncremental(Board, NL, Column, Play, AuxPlay).
-
-getPlays()
-
-
-incLine(Line, Column, NL, NC):-
-	NL is Line +1, Column = NC.
-*/
-
-%% a valid play is always valid doesnt matter who is playing
-valid_moves(Board, Player, ListOfMoves):-
+% List with possible moves in the current Board Game
+% -Board - Current Board game
+% -ListOfMoves - list with all possible moves in Board
+valid_moves(Board, ListOfMoves):-
 	findall([R,C],getElemInPosition(Board, R, C, 0), ListOfMoves). 
 
+
+% choose the next move in Level
+% +Board - Current board game
+% +Level - Level of the game
+% +Type - who is playing
+% -Move - Next Move 
+choose_move(Board, Level, Move, Type):-
+	cp_move(Board, Level, Move, Type).
+	
+
+% choose the next move in Level 1
+% +Board - Current board game
+% +Level - Level of the game
+% +Type - who is playing
+% -Move - Next Move 
+cp_move(Board, 1, Move, Type):-
+	valid_moves(Board, ListOfMoves), 
+	length(ListOfMoves, BS),
+	Bs is BS -1,
+	random(1,Bs, Random),
+	nth1(Random, ListOfMoves, Move).
+	
 
 
 findMyPieces(Board, Type):-
 	findall([R,C],getElemInPosition(Board, R, C, Type), ListOfMoves). 
 	
 
-placeNextToMe.
- 
 
 
 
@@ -52,6 +53,7 @@ findSequence(Line, Type):-
 	findall(possibleSequences(Type, Sequence),
 	segment(Line, Sequence).
 
+cp_move(Board, 2, Move, Type).
 
 possibleSequences(N, Sequence):- Sequence = [0, N, N, N, N].
 possibleSequences(N, Sequence):- Sequence = [N, N, N, N, 0]. 
