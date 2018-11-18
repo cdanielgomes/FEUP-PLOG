@@ -158,6 +158,8 @@ winDiagonal4(Board, Type):-
     computeRLDown(Board, 2, BoardSize, BoardSize, AuxListRLDown, DiagonalRLDown),!,
     checkLines(DiagonalRLDown, Type).
 
+
+
 %%Increment Lines Left to Right
 computeLRDown(_, Line, _, BoardSize,List2, AllDiag):- Line =:= BoardSize - 3, AllDiag = List2.
 computeLRDown(Board, L, C, BoardSize, AllDiagTemp, AllDiag):-
@@ -219,6 +221,7 @@ playerEat([H|T], Type, NewResult):-
     append([N], T, NewResult).
 
 playerEat([H|T], Type, NewResult):-
+    nth1(Type, [H|T], Elem),
     nth1(1, T, Elem2),
     N is Elem2 + 2,
     append([H], [N], NewResult).
@@ -365,6 +368,12 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     forceInsert(Line1, Col1, 0, Board, BoardIntermidiate),
     forceInsert(Line2, Col2, 0, BoardIntermidiate, NewBoard),
     playerEat(Result, Type, NewResult).
+
+checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
+    NewBoard = Board,
+    NewResult = Result.
+
+
 
 changeType(1, 2).
 changeType(2, 1).
