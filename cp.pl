@@ -35,6 +35,8 @@ incLine(Line, Column, NL, NC):-
 valid_moves(Board, Player, ListOfMoves):-
 	findall([R,C],getElemInPosition(Board, R, C, 0), ListOfMoves). 
 
+
+
 possibleSequences(N, Sequence):- Sequence = [0, N, N, N, N].
 possibleSequences(N, Sequence):- Sequence = [N, N, N, N, 0]. 
 possibleSequences(N, Sequence):- Sequence = [0, N, N, N].
