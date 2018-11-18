@@ -221,7 +221,6 @@ playerEat([H|T], Type, NewResult):-
     append([N], T, NewResult).
 
 playerEat([H|T], Type, NewResult):-
-    nth1(Type, [H|T], Elem),
     nth1(1, T, Elem2),
     N is Elem2 + 2,
     append([H], [N], NewResult).
