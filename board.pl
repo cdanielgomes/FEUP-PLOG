@@ -322,8 +322,9 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     Opposite = Type2, 
     Opposite = Type1,
     forceInsert(Line1, Column, 0, Board, BoardIntermidiate),
-    forceInsert(Line2, Column, 0, BoardIntermidiate, NewBoard),
-    playerEat(Result, Type, NewResult).
+    forceInsert(Line2, Column, 0, BoardIntermidiate, OtherBoard),
+    playerEat(Result, Type, NewResult),
+    checkEat(OtherBoard, NewResult, Line, Column, Type, NewBoard, OtherResult).
 
 %% check down and Upgrade
 checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
@@ -338,8 +339,9 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     Opposite = Type2, 
     Opposite = Type1,
     forceInsert(Line1, Column, 0, Board, BoardIntermidiate),
-    forceInsert(Line2, Column, 0, BoardIntermidiate, NewBoard),
-    playerEat(Result, Type, NewResult).
+    forceInsert(Line2, Column, 0, BoardIntermidiate, OtherBoard),
+    playerEat(Result, Type, NewResult),
+    checkEat(OtherBoard, NewResult, Line, Column, Type, NewBoard, OtherResult).
 
 %%check Left and upgrade
 checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
@@ -354,8 +356,9 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     Opposite = Type2, 
     Opposite = Type1,
     forceInsert(Line, Col1, 0, Board, BoardIntermidiate),
-    forceInsert(Line, Col2, 0, BoardIntermidiate, NewBoard),
-    playerEat(Result, Type, NewResult).
+    forceInsert(Line, Col2, 0, BoardIntermidiate, OtherBoard),
+    playerEat(Result, Type, NewResult),
+    checkEat(OtherBoard, NewResult, Line, Column, Type, NewBoard, OtherResult).
 
 %%check right and upgrade
 checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
@@ -370,8 +373,9 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     Opposite = Type2, 
     Opposite = Type1,
     forceInsert(Line, Col1, 0, Board, BoardIntermidiate),
-    forceInsert(Line, Col2, 0, BoardIntermidiate, NewBoard),
-    playerEat(Result, Type, NewResult).
+    forceInsert(Line, Col2, 0, BoardIntermidiate, OtherBoard),
+    playerEat(Result, Type, NewResult),
+    checkEat(OtherBoard, NewResult, Line, Column, Type, NewBoard, OtherResult).
 
 % check Diagonal Left Up and update
 checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
@@ -389,8 +393,9 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     Opposite = Type2, 
     Opposite = Type1,
     forceInsert(Line1, Col1, 0, Board, BoardIntermidiate),
-    forceInsert(Line2, Col2, 0, BoardIntermidiate, NewBoard),
-    playerEat(Result, Type, NewResult).
+    forceInsert(Line2, Col2, 0, BoardIntermidiate, OtherBoard),
+    playerEat(Result, Type, NewResult),
+    checkEat(OtherBoard, NewResult, Line, Column, Type, NewBoard, OtherResult).
 %%%%%%%%%%%%%
 
 % check Diagonal Left Down and update
@@ -409,8 +414,9 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     Opposite = Type2, 
     Opposite = Type1,
     forceInsert(Line1, Col1, 0, Board, BoardIntermidiate),
-    forceInsert(Line2, Col2, 0, BoardIntermidiate, NewBoard),
-    playerEat(Result, Type, NewResult).
+    forceInsert(Line2, Col2, 0, BoardIntermidiate, OtherBoard),
+    playerEat(Result, Type, NewResult),
+    checkEat(OtherBoard, NewResult, Line, Column, Type, NewBoard, OtherResult).
 
 
 % check Diagonal right Up and update
@@ -429,8 +435,9 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     Opposite = Type2, 
     Opposite = Type1,
     forceInsert(Line1, Col1, 0, Board, BoardIntermidiate),
-    forceInsert(Line2, Col2, 0, BoardIntermidiate, NewBoard),
-    playerEat(Result, Type, NewResult).
+    forceInsert(Line2, Col2, 0, BoardIntermidiate, OtherBoard),
+    playerEat(Result, Type, NewResult),
+    checkEat(OtherBoard, NewResult, Line, Column, Type, NewBoard, OtherResult).
 
 
 % check Diagonal right down and update
@@ -473,17 +480,6 @@ winByPieces([_|W], 2):-
     W >= 10.
 
 
-
-print_board([]).
-print_board([H|T]):-
-    print_line(H),
-    write('\n'),
-    print_board(T).
-    
-print_line([]).
-print_line([H|T]):-
-    write(H),
-    print_line(T).
 
 
 %convert the input od the user to number

@@ -1,4 +1,4 @@
-
+%Main menu
 mainMenu :-
 	clearScreen,
 	printPenteTitle,
@@ -15,7 +15,7 @@ mainMenu :-
 	).
 
 
-
+%Info
 info:- 
 	clearScreen,
 	printPenteTitle,
@@ -30,7 +30,7 @@ info:-
 	getContinue.
  
 	
-
+%Play Menu
 playMenu:- 
 	clearScreen,
 	printPenteTitle, 
@@ -66,6 +66,7 @@ printBlackWhite:-
 	write('-----                    2 - White                        -----\n'),
 	write('---------------------------------------------------------------\n').
 
+% Select CP difficulty
 select_CP_Type(CP):-
 	clearScreen,
 	printPenteTitle,
@@ -75,6 +76,7 @@ select_CP_Type(CP):-
 	skip_line,
 	cpType(Option, CP), !.
 
+% cp type
 cpType(1, 'randomMove').
 cpType(2, 'bestMove').
 cpType(_, CP):-
@@ -83,7 +85,7 @@ cpType(_, CP):-
 
 
 
-
+% prints playMenu
 printPlayMenu:- 
 	write('---------------------------------------------------------------\n'),
 	write('---------------------------------------------------------------\n'),
@@ -93,6 +95,7 @@ printPlayMenu:-
 	write('-----                    4 - Back                         -----\n'),
 	write('---------------------------------------------------------------\n').
 
+%prints mainmenu
 printMainMenu:- 
 	write('---------------------------------------------------------------\n'),
 	write('---------------------------------------------------------------\n'),
@@ -102,6 +105,7 @@ printMainMenu:-
 	write('-----                    4 - BACK                         -----\n'),
 	write('---------------------------------------------------------------\n').
 
+%prints cpselection menu
 printCPSelection:- 
 	write('---------------------------------------------------------------\n'),
 	write('-----                 Select CP difficulty                -----\n'),
@@ -111,6 +115,7 @@ printCPSelection:-
 	write('-----                    2 - BEST PLAY                    -----\n'),
 	write('---------------------------------------------------------------\n').
 
+%Rules
 rules:-
 	clearScreen,
 	printPenteTitle,

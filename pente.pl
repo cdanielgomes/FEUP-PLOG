@@ -5,10 +5,12 @@
 :-include('input.pl').
 :-include('cp.pl').
 
-pente:-
+
+%Calls the MainMenu / Starts Pente
+game:-
 	mainMenu.
 
-
+% Start game playing
 startGame(P1, P2):-
 	createEmptyBoard(19, B),
 	insertOnPositon(10, 10, 2, B, L),
@@ -31,10 +33,11 @@ game(P1, P2, Type, Board, Result):-
 	display_board(NewBoard, NewResult),
 	nextMove(P1, P2, Type, NewBoard, NewResult).
 
+%Computes player move
 playerMove(Type, Board, NewBoard, Result, NewResult):-
 	inputPiece(Type, Board, NewBoard, Result, NewResult).
 
-
+%Win verifications / next player move
 nextMove(_P1, _P2, Type, Board, Result):-
 	winGame(Board, Type), ! ,
 	victory(Type).
@@ -47,7 +50,7 @@ nextMove(P1, P2, Type, Board, Result):-
 	changeType(Type, NewType), !,
 	game(P1, P2, NewType, Board, Result).
 
-
+% In victory phase
 victory(Type):-
 	won(Type),
 	get_char(_),
