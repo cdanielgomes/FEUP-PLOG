@@ -14,6 +14,8 @@ randomMove(Type, Board, NewBoard):-
 randomMove(Type, Board, NewBoard):-
 	randomMove(Type, Board, NewBoard).
 
+
+
 /*	
 getPlays(_, L, L, Plays, AuxPlay):- Plays = AuxPlay.
 
@@ -35,6 +37,20 @@ incLine(Line, Column, NL, NC):-
 valid_moves(Board, Player, ListOfMoves):-
 	findall([R,C],getElemInPosition(Board, R, C, 0), ListOfMoves). 
 
+
+
+findMyPieces(Board, Type):-
+	findall([R,C],getElemInPosition(Board, R, C, Type), ListOfMoves). 
+	
+
+placeNextToMe.
+ 
+
+
+
+findSequence(Line, Type):-
+	findall(possibleSequences(Type, Sequence),
+	segment(Line, Sequence).
 
 
 possibleSequences(N, Sequence):- Sequence = [0, N, N, N, N].

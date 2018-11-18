@@ -1,5 +1,8 @@
 
 
+% Display game
+% +[L|T] - current board game
+%  +[H|C] - current result
 display_board([L|T], [H|C]):-
 	length(L,Size),
 	write(' '),
@@ -14,11 +17,12 @@ display_board([L|T], [H|C]):-
 	jogador_1(H),
 	jogador_2(C).
 
-
+%print of a cell
 print_cell(0):- put_code(9547).
 print_cell(2):- put_code(9675). 
 print_cell(1):- put_code(9679). %! white
 
+%print the id of the columns
 print_col_id(0, _).
 print_col_id(Size, Counter):-
 	Column is 0x0040 + Counter,

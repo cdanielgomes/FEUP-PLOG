@@ -89,26 +89,38 @@ getElemInPosition(Board, Line, Column,Type):-
     nth1(Line, Board, A),
     nth1(Column, A, Type). 
 
-%% fail if (Line, Column) is not a 0
+
+%% fail if (Line, Column) is not a 0. Can only insert in empty spaces
+% +Line - Number of the line
+% +Column - Number of the column
+% +Board - Game Board
 checkInsertion(Line, Column, Board):-
     getElemInPosition(Board, Line, Column, Symbol),
-    Symbol = 0 -> true; false.
+    Symbol = 0.
 
 
-
+% check a five sequence in a line
+% +Line - List where will be search a segmente of 5 Type elements
+% +Type -  
 checkFiveInLine(Line, Type):-
     length(N, 5),
     maplist(=(Type), N),
     segment(Line, N).
 
+%Caso base
 checkLines([], _).
+
+% +[H|T] - Board wich lines will be search for 5 sequenced elements of Type
+% +Type - Type that will be checked 
 checkLines([H|T], Type):-
     \+ checkFiveInLine(H, Type), %% false if found a five sequence
     checkLines(T, Type).
     
 
 
-%% Win Game
+%% Search for a victory in every direction
+% +Board - current GameBoard
+% +Type - Current player
 winGame(Board, Type):-
    \+ winVertical(Board, Type).
 
@@ -118,18 +130,24 @@ winGame(Board, Type):-
 winGame(Board, Type):-
    \+ winDiagonal(Board, Type).
 
-%%Win Vertical
+%% Check for a five elements em the vertical direction
+% +Board - current GameBoard
+% +Type - Current player
 winVertical(Board, Type):-
     transpose(Board, Vertical),
     checkLines(Vertical,Type).
 
-%%win Horizontal %% return false if game is won
+%% Horizontal check for a winning
+% +Board - current GameBoard
+% +Type - Current player
 winHorizontal(Board, Type):-
     checkLines(Board, Type).
 
 
 
-%return false if someone won the game
+% Check for a win in every Diagonal
+% +Board - current GameBoard
+% +Type - Current player
 winDiagonal(Board, Type):-
     winDiagonal1(Board, Type),
     winDiagonal2(Board, Type),
@@ -137,21 +155,35 @@ winDiagonal(Board, Type):-
     winDiagonal4(Board, Type).
 
 
+%Victory search on the diagonals above the main diagonal (inclusive) from right to left
+% +Board - current GameBoard
+% +Type - Current player
 winDiagonal1(Board, Type):-
     length(Board, BoardSize),
     computeRLUp(Board, 1, BoardSize, BoardSize, AuxListRLUp, DiagonalRLUp),!,
     checkLines(DiagonalRLUp, Type).
+
+%Victory search on the diagonals above the main diagonal (inclusive) from left to right
+% +Board - current GameBoard
+% +Type - Current player
 
 winDiagonal2(Board, Type):-
     length(Board, BoardSize),
     computeLRUp(Board, 1, 1, BoardSize, AuxListLRUp, DiagonalLRUp),!,
     checkLines(DiagonalLRUp, Type).
 
+%Victory search on the diagonals below the main diagonal (inclusive) from left to right
+% +Board - current GameBoard
+% +Type - Current player
 winDiagonal3(Board, Type):-
     length(Board, BoardSize),
     computeLRDown(Board, 1, 1, BoardSize, AuxListLRDown, DiagonalLRDown),!,
     checkLines(DiagonalLRDown, Type).
 
+
+%  Victory search on the diagonals below the main diagonal (inclusive) from right to left
+% +Board - current GameBoard
+% +Type - Current player
 winDiagonal4(Board, Type):-
     length(Board, BoardSize),
     computeRLDown(Board, 2, BoardSize, BoardSize, AuxListRLDown, DiagonalRLDown),!,
@@ -159,7 +191,13 @@ winDiagonal4(Board, Type):-
 
 
 
-%%Increment Lines Left to Right
+%Compute the diagonals below the main diagonal from left to right
+% +Board - Current Board
+% +L - line where the diagonal should begin
+% +C - Column where the diagonal should begin
+% +BoardSize - board size
+% +AllDiagTemp - auxiliar to calculate all the diagonals
+% -AllDiag - diagonals computed
 computeLRDown(_, Line, _, BoardSize,List2, AllDiag):- Line =:= BoardSize - 3, AllDiag = List2.
 computeLRDown(Board, L, C, BoardSize, AllDiagTemp, AllDiag):-
     lrInc(Board, L, C, BoardSize, List, Diag),
@@ -168,7 +206,14 @@ computeLRDown(Board, L, C, BoardSize, AllDiagTemp, AllDiag):-
     computeLRDown(Board, L1, C, BoardSize, List1, AllDiag).
 
 
-%%Increment Columns Left to Right
+
+%Compute the diagonals above the main diagonal from left to right
+% +Board - Current Board
+% +L - line where the diagonal should begin
+% +C - Column where the diagonal should begin
+% +BoardSize - board size
+% +AllDiagTemp - auxiliar to calculate all the diagonals
+% -AllDiag - diagonals computed
 computeLRUp(_, _, Column, BoardSize, List2, AllDiag):- Column =:= BoardSize - 3, AllDiag = List2.
 computeLRUp(Board, L, C, BoardSize, AllDiagTemp, AllDiag):-
     lrInc(Board, L, C, BoardSize, List, Diag),
@@ -176,6 +221,14 @@ computeLRUp(Board, L, C, BoardSize, AllDiagTemp, AllDiag):-
     append(AllDiagTemp, [Diag], List1),
     computeLRUp(Board, L, C1, BoardSize, List1, AllDiag).
 
+
+%Compute one diagonal from left to right
+% +Board - Current Board
+% +L - line where the diagonal should begin
+% +C - Column where the diagonal should begin
+% +BoardSize - board size
+% +Diagonal - auxiliar to calculate the diagonal
+% -FinalDiagonal - diagonal computed
 lrInc(_, _, Column, BoardSize, List2, FinalDiagonal):- C1 is Column - 1, BoardSize = C1, FinalDiagonal=List2.
 lrInc(_, Line, _, BoardSize, List2, FinalDiagonal):- L1 is Line - 1, BoardSize = L1, FinalDiagonal=List2.
 lrInc(Board,Line, Column, BoardSize, Diagonal, FinalDiagonal):-
@@ -187,7 +240,14 @@ lrInc(Board,Line, Column, BoardSize, Diagonal, FinalDiagonal):-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%Increment Lines Right to Left
+
+%Compute the diagonals below the main diagonal from right to left
+% +Board - Current Board
+% +L - line where the diagonal should begin
+% +C - Column where the diagonal should begin
+% +BoardSize - board size
+% +AllDiagTemp - auxiliar to calculate all the diagonals
+% -AllDiag - diagonals computed
 computeRLDown(_, Line, _, BoardSize,List2, AllDiag):- Line =:= BoardSize - 3, AllDiag = List2.
 computeRLDown(Board, L, C, BoardSize, AllDiagTemp, AllDiag):-
     rlInc(Board, L, C, BoardSize, List, Diag),
@@ -195,7 +255,14 @@ computeRLDown(Board, L, C, BoardSize, AllDiagTemp, AllDiag):-
     append(AllDiagTemp, [Diag], List1),
     computeRLDown(Board, L1, C, BoardSize, List1, AllDiag).
 
-%%Increment Columns Right to Left
+
+%Compute the diagonals above the main diagonal from right to left
+% +Board - Current Board
+% +L - line where the diagonal should begin
+% +C - Column where the diagonal should begin
+% +BoardSize - board size
+% +AllDiagTemp - auxiliar to calculate all the diagonals
+% -AllDiag - diagonals computed
 computeRLUp(_, _, Column, BoardSize,List2, AllDiag):- Column = 4, AllDiag = List2.
 computeRLUp(Board, L, C, BoardSize, AllDiagTemp, AllDiag):-
     rlInc(Board, L, C, BoardSize, List, Diag),
@@ -203,6 +270,13 @@ computeRLUp(Board, L, C, BoardSize, AllDiagTemp, AllDiag):-
     append(AllDiagTemp, [Diag], List1),
     computeRLUp(Board, L, C1, BoardSize, List1, AllDiag).
 
+%Compute one diagonal from right to left
+% +Board - Current Board
+% +L - line where the diagonal should begin
+% +C - Column where the diagonal should begin
+% +BoardSize - board size
+% +Diagonal - auxiliar to calculate the diagonal
+% -FinalDiagonal - diagonal computed
 rlInc(_, _, Column, _, List2, FinalDiagonal):- 0 = Column, FinalDiagonal=List2.
 rlInc(_, Line, _, BoardSize, List2, FinalDiagonal):- L1 is Line - 1, BoardSize = L1, FinalDiagonal=List2.
 rlInc(Board,Line, Column, BoardSize, Diagonal, FinalDiagonal):-
@@ -213,6 +287,10 @@ rlInc(Board,Line, Column, BoardSize, Diagonal, FinalDiagonal):-
     rlInc(Board, NewLine, NewColumn, BoardSize, List1, FinalDiagonal).
 
 
+%incremente the socre of the game
+% +[H|T] - current score
+% +Type - who eat
+% -NewResult - the result  
 playerEat([H|T], Type, NewResult):-
     Type = 1,
     nth1(Type, [H|T], Elem),
@@ -224,7 +302,14 @@ playerEat([H|T], Type, NewResult):-
     N is Elem2 + 2,
     append([H], [N], NewResult).
 
-%%check Up and upgrade
+% Check if a player can eat pieces and update the score
+% +Board - Current Board 
+% +Result - Current score
+% +Line - line where the player inserted his piece
+% +Column - column where the player inserted his piece
+% +Type - who played
+% -NewBoard - Board updated
+% -NewResult - Result updated
 checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     Line1 is Line - 1,
     Line2 is Line - 2,
@@ -372,10 +457,13 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     NewResult = Result.
 
 
-
+% Opposite player
 changeType(1, 2).
 changeType(2, 1).
 
+%Check a win by number of pieces eat
+% +[B|_]/([_|W] - current Result
+% 1/2 - Player 
 winByPieces([B|_], 1):-
     integer(B),
     B >= 10.
@@ -397,6 +485,8 @@ print_line([H|T]):-
     write(H),
     print_line(T).
 
+
+%convert the input od the user to number
 conversion('A', 1).
 conversion('B', 2).
 conversion('C', 3).
