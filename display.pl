@@ -17,11 +17,13 @@ display_board([L|T], [H|C]):-
 	jogador_1(H),
 	jogador_2(C).
 
-%print of a cell
-print_cell(0):- put_code(9547).
-print_cell(2):- put_code(9675). 
-print_cell(1):- put_code(9679). %! white
 
+print_cell(0):- put_code(9547).	% symbol for intersection without piece
+print_cell(2):- put_code(9675). % symbol for white piece
+print_cell(1):- put_code(9679). % symbol for black piece
+
+
+% Printing the columns indexes
 %print the id of the columns
 print_col_id(0, _).
 print_col_id(Size, Counter):-
@@ -34,13 +36,14 @@ print_col_id(Size, Counter):-
 
 
 
-
+% Prints the top of the board
 print_top_Board(0).
 print_top_Board(Size):-
 	put_code(9523),
 	Size1 is Size-1,
 	print_top_Board(Size1).
 
+% Recursive call for printing lines
 print_Lines([],_,_).
 print_Lines([C|L], Size, Counter):-
 	put_code(9507),
@@ -49,17 +52,24 @@ print_Lines([C|L], Size, Counter):-
 	Counter2 is Counter + 1,
 	print_Lines(L, Size, Counter2).
 
+% Print line
 print_line_Board([],0).
 print_line_Board([C|L],Size):-
 	print_cell(C),
 	Size1 is Size -1,
 	print_line_Board(L,Size1).
 
+%Prints the bot of the board
 print_bot_Board(0).
 print_bot_Board(Size):-
 	put_code(9531),
 	Size1 is Size-1,
 	print_bot_Board(Size1).
+
+% Both black and white captured pieces
+jogador_1(L):- L<10,nl, write('Player '), print_cell(1), write(' already captured '), write(L), print_cell(2), write('\n'); nl,nl,L=:=10, write('Player '), print_cell(1) , write(' won\n').    
+jogador_2([L|_]):-L<10, write('Player '), print_cell(2), write(' already captured '), write(L), print_cell(1), write('\n');nl,nl, L=:=10, write('Player '), print_cell(2) , write(' won\n').    
+
 
 
 
@@ -88,8 +98,6 @@ printWon(1):-
 
 
 
-jogador_1(L):- L<10,nl, write('Player '), print_cell(1), write(' already captured '), write(L), print_cell(2), write('\n'); nl,nl,L=:=10, write('Player '), print_cell(1) , write(' won\n').    
-jogador_2([L|_]):-L<10, write('Player '), print_cell(2), write(' already captured '), write(L), print_cell(1), write('\n');nl,nl, L=:=10, write('Player '), print_cell(2) , write(' won\n').    
 
 
 
