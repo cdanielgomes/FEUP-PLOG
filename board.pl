@@ -474,17 +474,6 @@ winByPieces([_|W], 2):-
 
 
 
-print_board([]).
-print_board([H|T]):-
-    print_line(H),
-    write('\n'),
-    print_board(T).
-    
-print_line([]).
-print_line([H|T]):-
-    write(H),
-    print_line(T).
-
 
 %convert the input od the user to number
 conversion('A', 1).
