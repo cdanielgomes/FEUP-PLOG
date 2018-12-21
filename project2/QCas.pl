@@ -9,6 +9,7 @@
  *  4 - desconhecidos;
  * 
 */
+:- use_module(library(lists)).
 :- use_module(library(clpfd)).
 
 pessoa("joao", 1, [1,0], [jogos]).
@@ -67,7 +68,7 @@ pessoa("amigo9", 53, [0,2], []).
 pessoa("amigo10", 54, [0,2], []).
 pessoa("amigo11", 55, [0,2], []).
 pessoa("amigo13", 56, [0,2], []).
-pessoa("amigo14", 57, [0,2],[]).
+pessoa("amigo14", 57, [0,2], []).
 number(57).
 together([[1,2,3,4],[6,7], [10,11], [12,13], [14,15], [17,21], [23,24], [25,26],[27,28,29,30,31],[30,31],[32,33],[34,35],[36,37],[38,39],[40,41],[42,43]]).
 
@@ -77,12 +78,46 @@ entrypoint:-
     findall(ID2, pessoa(B, ID2, [_,1] , Loi), FamNoiva), write(FamNoiva),nl,
     findall(ID3, pessoa(C, ID3,[2,_], AmigosNoivoLI), AmgNoivo), write(AmgNoivo),nl,
     findall(ID4, pessoa(D, ID4,[_,2], AmigosNoivaLI), AmgNoiva), write(AmgNoiva),nl,
-    domain(Range, 8, 12), mesas(Range, NMesas),
-    all_distinct(Mesa).
+    domain(Range, 8, 12), mesas(Range, Mesas), makeAllDistinct(Mesas), famTogether(FamNoivo, FamNoiva, Mesas), friendsTogether(AmgNoivo,AmgNoiva, Mesas), flattenList(Mesas, NestedMesas),
+    labeling([], NestedMesas).
+    
 
 
-mesas(Range, NMesas) :- 
-    number(A), NMesas #= ceiling(A / Range).
+
+famTogether(FamNoivo, FamNoiva, Mesas):-
+    length(Mesas, A), 
+    element(Index, Mesas, Mesa),
+    element(Index2, Mesa, Guest).
+
+
+    
+    
+
+mesas(Range, ListaMesas):-
+    number(A), NMesas #= ceiling(A / Range),
+    createLists(NMesas, ListaMesas).
+
+
+createLists(0, R, _).
+createLists(NMesas, List, Range):-
+    length(A, Range),
+    append(List, A),
+    N is NMesas - 1,
+    createLists(N, List, Range).
+
+
+makeAllDistinct([]).
+makeAllDistinct([H|T]):-
+all_distinct(H),
+makeAllDistinct(T).
+
+
+flattenList([], []).
+flattenList([Line | List], Result):-
+	is_list(Line), flattenList(Line, Result2), append(Result2, Tmp, Result), flattenList(List, Tmp).
+flattenList([Line | List], [Line | Result]):-
+	\+is_list(Line), flattenList(List, Result).
+    
     
     
 
