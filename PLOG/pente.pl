@@ -38,11 +38,11 @@ playerMove(Type, Board, NewBoard, Result, NewResult):-
 	inputPiece(Type, Board, NewBoard, Result, NewResult).
 
 %Win verifications / next player move
-nextMove(_P1, _P2, Type, Board, Result):-
+nextMove(_P1, _P2, Type, Board, _):-
 	winGame(Board, Type), ! ,
 	victory(Type).
 
-nextMove(_P1, _P2, Type, Board, Result):-
+nextMove(_P1, _P2, Type, _, Result):-
 	winByPieces(Result, Type),
 	victory(Type).
 

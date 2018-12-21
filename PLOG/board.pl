@@ -160,7 +160,7 @@ winDiagonal(Board, Type):-
 % +Type - Current player
 winDiagonal1(Board, Type):-
     length(Board, BoardSize),
-    computeRLUp(Board, 1, BoardSize, BoardSize, AuxListRLUp, DiagonalRLUp),!,
+    computeRLUp(Board, 1, BoardSize, BoardSize, _, DiagonalRLUp),!,
     checkLines(DiagonalRLUp, Type).
 
 %Victory search on the diagonals above the main diagonal (inclusive) from left to right
@@ -169,7 +169,7 @@ winDiagonal1(Board, Type):-
 
 winDiagonal2(Board, Type):-
     length(Board, BoardSize),
-    computeLRUp(Board, 1, 1, BoardSize, AuxListLRUp, DiagonalLRUp),!,
+    computeLRUp(Board, 1, 1, BoardSize, _, DiagonalLRUp),!,
     checkLines(DiagonalLRUp, Type).
 
 %Victory search on the diagonals below the main diagonal (inclusive) from left to right
@@ -177,7 +177,7 @@ winDiagonal2(Board, Type):-
 % +Type - Current player
 winDiagonal3(Board, Type):-
     length(Board, BoardSize),
-    computeLRDown(Board, 1, 1, BoardSize, AuxListLRDown, DiagonalLRDown),!,
+    computeLRDown(Board, 1, 1, BoardSize, _, DiagonalLRDown),!,
     checkLines(DiagonalLRDown, Type).
 
 
@@ -186,7 +186,7 @@ winDiagonal3(Board, Type):-
 % +Type - Current player
 winDiagonal4(Board, Type):-
     length(Board, BoardSize),
-    computeRLDown(Board, 2, BoardSize, BoardSize, AuxListRLDown, DiagonalRLDown),!,
+    computeRLDown(Board, 2, BoardSize, BoardSize, _, DiagonalRLDown),!,
     checkLines(DiagonalRLDown, Type).
 
 
@@ -200,7 +200,7 @@ winDiagonal4(Board, Type):-
 % -AllDiag - diagonals computed
 computeLRDown(_, Line, _, BoardSize,List2, AllDiag):- Line =:= BoardSize - 3, AllDiag = List2.
 computeLRDown(Board, L, C, BoardSize, AllDiagTemp, AllDiag):-
-    lrInc(Board, L, C, BoardSize, List, Diag),
+    lrInc(Board, L, C, BoardSize, _, Diag),
     L1 is L + 1,   
     append(AllDiagTemp, [Diag], List1),
     computeLRDown(Board, L1, C, BoardSize, List1, AllDiag).
@@ -216,7 +216,7 @@ computeLRDown(Board, L, C, BoardSize, AllDiagTemp, AllDiag):-
 % -AllDiag - diagonals computed
 computeLRUp(_, _, Column, BoardSize, List2, AllDiag):- Column =:= BoardSize - 3, AllDiag = List2.
 computeLRUp(Board, L, C, BoardSize, AllDiagTemp, AllDiag):-
-    lrInc(Board, L, C, BoardSize, List, Diag),
+    lrInc(Board, L, C, BoardSize, _, Diag),
     C1 is C + 1,   
     append(AllDiagTemp, [Diag], List1),
     computeLRUp(Board, L, C1, BoardSize, List1, AllDiag).
@@ -250,7 +250,7 @@ lrInc(Board,Line, Column, BoardSize, Diagonal, FinalDiagonal):-
 % -AllDiag - diagonals computed
 computeRLDown(_, Line, _, BoardSize,List2, AllDiag):- Line =:= BoardSize - 3, AllDiag = List2.
 computeRLDown(Board, L, C, BoardSize, AllDiagTemp, AllDiag):-
-    rlInc(Board, L, C, BoardSize, List, Diag),
+    rlInc(Board, L, C, BoardSize, _, Diag),
     L1 is L + 1,   
     append(AllDiagTemp, [Diag], List1),
     computeRLDown(Board, L1, C, BoardSize, List1, AllDiag).
@@ -263,9 +263,9 @@ computeRLDown(Board, L, C, BoardSize, AllDiagTemp, AllDiag):-
 % +BoardSize - board size
 % +AllDiagTemp - auxiliar to calculate all the diagonals
 % -AllDiag - diagonals computed
-computeRLUp(_, _, Column, BoardSize,List2, AllDiag):- Column = 4, AllDiag = List2.
+computeRLUp(_, _, Column, _,List2, AllDiag):- Column = 4, AllDiag = List2.
 computeRLUp(Board, L, C, BoardSize, AllDiagTemp, AllDiag):-
-    rlInc(Board, L, C, BoardSize, List, Diag),
+    rlInc(Board, L, C, BoardSize, _, Diag),
     C1 is C - 1,   
     append(AllDiagTemp, [Diag], List1),
     computeRLUp(Board, L, C1, BoardSize, List1, AllDiag).
@@ -297,7 +297,7 @@ playerEat([H|T], Type, NewResult):-
     N is Elem + 2, 
     append([N], T, NewResult).
 
-playerEat([H|T], Type, NewResult):-
+playerEat([H|T], _, NewResult):-
     nth1(1, T, Elem2),
     N is Elem2 + 2,
     append([H], [N], NewResult).
@@ -324,7 +324,7 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     forceInsert(Line1, Column, 0, Board, BoardIntermidiate),
     forceInsert(Line2, Column, 0, BoardIntermidiate, OtherBoard),
     playerEat(Result, Type, NewResult),
-    checkEat(OtherBoard, NewResult, Line, Column, Type, NewBoard, OtherResult).
+    checkEat(OtherBoard, NewResult, Line, Column, Type, NewBoard, _).
 
 %% check down and Upgrade
 checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
@@ -341,7 +341,7 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     forceInsert(Line1, Column, 0, Board, BoardIntermidiate),
     forceInsert(Line2, Column, 0, BoardIntermidiate, OtherBoard),
     playerEat(Result, Type, NewResult),
-    checkEat(OtherBoard, NewResult, Line, Column, Type, NewBoard, OtherResult).
+    checkEat(OtherBoard, NewResult, Line, Column, Type, NewBoard, _).
 
 %%check Left and upgrade
 checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
@@ -358,7 +358,7 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     forceInsert(Line, Col1, 0, Board, BoardIntermidiate),
     forceInsert(Line, Col2, 0, BoardIntermidiate, OtherBoard),
     playerEat(Result, Type, NewResult),
-    checkEat(OtherBoard, NewResult, Line, Column, Type, NewBoard, OtherResult).
+    checkEat(OtherBoard, NewResult, Line, Column, Type, NewBoard, _).
 
 %%check right and upgrade
 checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
@@ -375,7 +375,7 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     forceInsert(Line, Col1, 0, Board, BoardIntermidiate),
     forceInsert(Line, Col2, 0, BoardIntermidiate, OtherBoard),
     playerEat(Result, Type, NewResult),
-    checkEat(OtherBoard, NewResult, Line, Column, Type, NewBoard, OtherResult).
+    checkEat(OtherBoard, NewResult, Line, Column, Type, NewBoard, _).
 
 % check Diagonal Left Up and update
 checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
@@ -395,7 +395,7 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     forceInsert(Line1, Col1, 0, Board, BoardIntermidiate),
     forceInsert(Line2, Col2, 0, BoardIntermidiate, OtherBoard),
     playerEat(Result, Type, NewResult),
-    checkEat(OtherBoard, NewResult, Line, Column, Type, NewBoard, OtherResult).
+    checkEat(OtherBoard, NewResult, Line, Column, Type, NewBoard, _).
 %%%%%%%%%%%%%
 
 % check Diagonal Left Down and update
@@ -416,7 +416,7 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     forceInsert(Line1, Col1, 0, Board, BoardIntermidiate),
     forceInsert(Line2, Col2, 0, BoardIntermidiate, OtherBoard),
     playerEat(Result, Type, NewResult),
-    checkEat(OtherBoard, NewResult, Line, Column, Type, NewBoard, OtherResult).
+    checkEat(OtherBoard, NewResult, Line, Column, Type, NewBoard, _).
 
 
 % check Diagonal right Up and update
@@ -437,7 +437,7 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     forceInsert(Line1, Col1, 0, Board, BoardIntermidiate),
     forceInsert(Line2, Col2, 0, BoardIntermidiate, OtherBoard),
     playerEat(Result, Type, NewResult),
-    checkEat(OtherBoard, NewResult, Line, Column, Type, NewBoard, OtherResult).
+    checkEat(OtherBoard, NewResult, Line, Column, Type, NewBoard, _).
 
 
 % check Diagonal right down and update
@@ -459,7 +459,7 @@ checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
     forceInsert(Line2, Col2, 0, BoardIntermidiate, NewBoard),
     playerEat(Result, Type, NewResult).
 
-checkEat(Board, Result, Line, Column, Type, NewBoard, NewResult):-
+checkEat(Board, Result, _, _, _, NewBoard, NewResult):-
     NewBoard = Board,
     NewResult = Result.
 

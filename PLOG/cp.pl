@@ -8,8 +8,8 @@
 % -NewBoard - Board with  the new game state 
 randomMove(Type, Board, NewBoard, Result, NewResult):-
 	choose_move(Board, 1, Move, 1), 
-	nth1(1, Move, R, C1),
-	nth1(1, C1, C),
+	nth1(1, Move, R),
+	nth1(2, Move, C),
 	checkEat(Board, Result, R, C, Type, MidBoard, NewResult),
 	insertOnPositon(R, C, Type, MidBoard, NewBoard).
 
@@ -17,7 +17,8 @@ randomMove(Type, Board, NewBoard, Result, NewResult):-
 % -Board - Current Board game
 % -ListOfMoves - list with all possible moves in Board
 valid_moves(Board, ListOfMoves):-
-	findall([R,C],getElemInPosition(Board, R, C, 0), ListOfMoves). 
+	setof([R,C],getElemInPosition(Board, R, C, 0), ListOfMoves),!,
+	length(ListOfMoves, N).
 
 
 % choose the next move in Level
@@ -34,17 +35,18 @@ choose_move(Board, Level, Move, Type):-
 % +Level - Level of the game
 % +Type - who is playing
 % -Move - Next Move 
-cp_move(Board, 1, Move, Type):-
+cp_move(Board, 1, Move, _):-
 	valid_moves(Board, ListOfMoves), 
 	length(ListOfMoves, BS),
-	Bs is BS -1,
+	Bs is BS - 1,
 	random(1,Bs, Random),
 	nth1(Random, ListOfMoves, Move).
-	
+
+%cp_move(Board, 2, Move, _).
 
 
 findMyPieces(Board, Type):-
-	findall([R,C],getElemInPosition(Board, R, C, Type), ListOfMoves). 
+	findall([R,C],getElemInPosition(Board, R, C, Type), _ListOfMoves). 
 	
 
 
@@ -53,7 +55,6 @@ findSequence(Line, Type):-
 	findall(possibleSequences(Type, Sequence),
 	segment(Line, Sequence).
 */
-cp_move(Board, 2, Move, Type).
 
 possibleSequences(N, Sequence):- Sequence = [0, N, N, N, N].
 possibleSequences(N, Sequence):- Sequence = [N, N, N, N, 0]. 
