@@ -73,25 +73,33 @@ number(57).
 together([[1,2,3,4],[6,7], [10,11], [12,13], [14,15], [17,21], [23,24], [25,26],[27,28,29,30,31],[30,31],[32,33],[34,35],[36,37],[38,39],[40,41],[42,43]]).
 
 
+generateRandomList(NConvidados, OutputList):-
+    Counter < 0,
+
+
+
 entrypoint:-
     findall(ID, pessoa(A, ID, [1,_], ListOfInt), FamNoivo), write(FamNoivo), nl,
     findall(ID2, pessoa(B, ID2, [_,1] , Loi), FamNoiva), write(FamNoiva),nl,
     findall(ID3, pessoa(C, ID3,[2,_], AmigosNoivoLI), AmgNoivo), write(AmgNoivo),nl,
     findall(ID4, pessoa(D, ID4,[_,2], AmigosNoivaLI), AmgNoiva), write(AmgNoiva),nl,
-    domain(Range, 8, 12), mesas(Range, Mesas), makeAllDistinct(Mesas), famTogether(FamNoivo, FamNoiva, Mesas), friendsTogether(AmgNoivo,AmgNoiva, Mesas), flattenList(Mesas, NestedMesas),
+    domain(Range, 8, 12), mesas(Range, Mesas), makeAllDistinct(Mesas), famTogether(FamNoivo, FamNoiva, Mesas), flattenList(Mesas, NestedMesas),
     labeling([], NestedMesas).
     
 
 
-
+/* 
 famTogether(FamNoivo, FamNoiva, Mesas):-
-    length(Mesas, A), 
+    length(Mesas, A),
+    domain(Index, 1, A),
     element(Index, Mesas, Mesa),
-    element(Index2, Mesa, Guest).
-
-
+    length(Mesa, B), domain(Index2, 1, B),
+    element(Index2, Mesa, Guest),
+    element(,FamNoiva, Guest)
+ */
     
-    
+%famTogether(FamNoivo, FamNoiva, Mesas, Range):-
+        
 
 mesas(Range, ListaMesas):-
     number(A), NMesas #= ceiling(A / Range),
