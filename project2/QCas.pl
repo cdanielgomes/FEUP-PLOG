@@ -92,10 +92,8 @@ amizade(5,4).
 generateRandomList(0, OutputList).
 generateRandomList(NConvidados, [H|T]):-
     NConvidados > 0,
-    random(0,3,A), 
-    random(0,1,Noivo),
-    C = Noivo-A,
-    H = [NConvidados, C, []],
+    random(1,5,A), 
+    H = A,
     N is NConvidados - 1,
     generateRandomList(N, T).
 
@@ -109,8 +107,8 @@ quintinha(Table):-
 		domain(Table, 1, 10),
 		all_distinct(Table),
 		findall(N, countFriends(_ , Table, N), All),
-		sum(All, #=, Total),
-		labeling([maximize(Total)], Table).
+		maximize(sum(All, #=, Total),Total),
+		labeling([], Table).
 
 
 countFriendsForAll([],[_], Final, Final).
@@ -131,21 +129,25 @@ teste:- countFriends(1, [1,2,3,4,5,6,7,8,9,10], R),
 		write(R).
 
 
+entrypoint(NG):-
+    Range in 8..12, generateRandomList(NG, ListOfIds),
+    mesas(NG, Range, Mesas), flattenList(Mesas, R), labeling([], R), write(R).
+	 
 
 
-
-
-%entrypoint:-
-%    findall(ID, pessoa(A, ID, [1,_], ListOfInt), FamNoivo), write(FamNoivo), nl,
-%    findall(ID2, pessoa(B, ID2, [_,1] , Loi), FamNoiva), write(FamNoiva),nl,
-%    findall(ID3, pessoa(C, ID3,[2,_], AmigosNoivoLI), AmgNoivo), write(AmgNoivo),nl,
-%    findall(ID4, pessoa(D, ID4,[_,2], AmigosNoivaLI), AmgNoiva), write(AmgNoiva),nl,
-%    domain(Range, 8, 12), mesas(Range, NMesas),
-%    all_distinct(Mesa).
-
-
-mesas(Range, NMesas) :- 
-    number(A), NMesas #= ceiling(A / Range).
+mesas(NG, Range, Mesas) :- 
+   NMesas #= NG / Range,
+   createList(NMesas, Mesas, Range).
     
-    
+createList(0, List, _).
+createList(N, [A|B], Range):-
+    length(C, Range),
+    A = C, 
+    N1 is N -1,
+    createList(N1, B, Range).
 
+flattenList([], []).
+flattenList([Line | List], Result):-
+	is_list(Line), flattenList(Line, Result2), append(Result2, Tmp, Result), flattenList(List, Tmp).
+flattenList([Line | List], [Line | Result]):-
+	\+is_list(Line), flattenList(List, Result).
