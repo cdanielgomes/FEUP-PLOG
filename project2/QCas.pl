@@ -11,7 +11,7 @@
 */
 :- use_module(library(lists)).
 :- use_module(library(clpfd)).
-
+:- use_module(library(random)).
 pessoa("joao", 1, [1,0], [jogos]).
 pessoa("mae noivo",2, [1,0], [revistas,trabalho]).
 pessoa("pai noivo", 3, [1,0], [futebol]).
@@ -73,8 +73,15 @@ number(57).
 together([[1,2,3,4],[6,7], [10,11], [12,13], [14,15], [17,21], [23,24], [25,26],[27,28,29,30,31],[30,31],[32,33],[34,35],[36,37],[38,39],[40,41],[42,43]]).
 
 
-generateRandomList(NConvidados, OutputList):-
-    Counter < 0,
+generateRandomList(0, OutputList).
+generateRandomList(NConvidados, [H|T]):-
+    NConvidados > 0,
+    random(0,3,A), 
+    random(0,1,Noivo),
+    C = Noivo-A,
+    H = [NConvidados, C, []],
+    N is NConvidados - 1,
+    generateRandomList(N, T).
 
 
 
