@@ -107,7 +107,7 @@ quintinha(Table):-
 		domain(Table, 1, 10),
 		all_distinct(Table),
 		findall(N, countFriends(_ , Table, N), All),
-		maximize(sum(All, #=, Total),Total),
+		maximize(sum(All, #=, Total),Total), write(Total),
 		labeling([], Table).
 
 
@@ -131,7 +131,7 @@ teste:- countFriends(1, [1,2,3,4,5,6,7,8,9,10], R),
 
 entrypoint(NG):-
     Range in 8..12, generateRandomList(NG, ListOfIds),
-    mesas(NG, Range, Mesas), flattenList(Mesas, R), labeling([], R), write(R).
+    mesas(NG, Range, Mesas), length(Mesas,A), solve(Mesas, ListOfIdsm, A), flattenList(Mesas, R), all_distinct(R), labeling([], R), write(R).
 	 
 
 
@@ -139,6 +139,25 @@ mesas(NG, Range, Mesas) :-
    NMesas #= NG / Range,
    createList(NMesas, Mesas, Range).
     
+solve(_,_,0).
+solve(Mesas, ListOfIds, Count):-
+	Count > 0,
+	nth1(Count, Mesas, Mesa),
+	perlist(Mesa, ListOfIds),
+	Count1 is Count -1,
+	solve(Mesas, ListOfIds, Count1).
+
+perlist(Mesa, ListOfIds):-
+	length(Mesa, A), Chair in 1..A,
+	Chair2 in 1..A,
+	element(Chair, Mesa, Person),
+	element(Chair2, Mesa, Person2),
+	length(ListOfIds, B), IndexID1 in 1..B, IndexID2 in 1..B,
+	element(IndexID1, ListOfIds, Pr),
+	element(IndexID2, ListOfIds, Pr1),
+	IndexID1 #\= IndexID2,
+	Pr #= Pr1, Person #= IndexID1, Person2 = IndexID2.
+
 createList(0, List, _).
 createList(N, [A|B], Range):-
     length(C, Range),
