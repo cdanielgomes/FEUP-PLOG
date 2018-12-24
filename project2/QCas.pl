@@ -80,14 +80,21 @@ amizade(1,6).
 amizade(2,5).
 amizade(2,6).
 amizade(2,4).
-amizade(2,5).
 amizade(3,1).
-amizade(3,4).
+%amizade(3,4).
 amizade(4,3).
 amizade(4,5).
 amizade(6,1).
 amizade(6,2).
 amizade(5,4).
+amizade(9,1).
+amizade(9,2).
+amizade(9,10).
+
+
+casado(2,10).
+casado(5,7).
+casado(6,9).
 
 generateRandomList(0, OutputList).
 generateRandomList(NConvidados, [H|T]):-
@@ -98,18 +105,33 @@ generateRandomList(NConvidados, [H|T]):-
     generateRandomList(N, T).
 
 
-casado(2,3).
-casado(3,2).
-casado(6,7).
 
-quintinha(Table):-
+
+checkCouple([_], T, 6).
+checkCouple([_], T, 7).
+checkCouple([] , T, _).
+checkCouple([Id|RestOfGuests] , T, Counter):-
+	Pos #= Counter,
+	(	
+		(Pos #\= 5 , casado(Id,H) , element(Pos, T, Id) , PosD #= Pos + 1 ,element(PosD, T, H) , Counter1 #= Counter + 2) ;
+		(Pos #= 5 , casado(Id,H) , Counter1 #= Counter );
+		(\+ casado(Id,H) , element(Pos, T, Id) , Counter1 #= Counter + 1)
+	),
+	checkCouple(RestOfGuests, T, Counter1).
+
+
+quintinha(Guests, Table):-
 		length(Table, 5),
 		domain(Table, 1, 10),
 		all_distinct(Table),
+		checkCouple(Guests, Table , 1),
 		findall(N, countFriends(_ , Table, N), All),
-		maximize(sum(All, #=, Total),Total),
+
+		maximize(countFriends(E , Table, N),N),
 		labeling([], Table).
 
+
+test:- quintinha([1,2,4,5,6], T ), write(T).
 
 countFriendsForAll([],[_], Final, Final).
 countFriendsForAll([H|T],L, Result, Final):-
@@ -125,8 +147,7 @@ countFriends(E, [H|T], N):-
 	countFriends(E, T, M),
 	N #= M+B.
 
-teste:- countFriends(1, [1,2,3,4,5,6,7,8,9,10], R),
-		write(R).
+
 
 
 entrypoint(NG):-
