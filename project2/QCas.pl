@@ -81,7 +81,7 @@ amizade(2,5).
 amizade(2,6).
 amizade(2,4).
 amizade(3,1).
-%amizade(3,4).
+amizade(3,4).
 amizade(4,3).
 amizade(4,5).
 amizade(6,1).
@@ -96,42 +96,66 @@ casado(2,10).
 casado(5,7).
 casado(6,9).
 
-generateRandomList(0, OutputList).
-generateRandomList(NConvidados, [H|T]):-
-    NConvidados > 0,
-    random(1,5,A), 
-    H = A,
-    N is NConvidados - 1,
-    generateRandomList(N, T).
 
 
 
 
-checkCouple([_], T, 6).
-checkCouple([_], T, 7).
-checkCouple([] , T, _).
+checkCouple([] , _, _).
+checkCouple([_|_], T, N):-
+	length(T,L),
+	C #= N- L,
+	C #> 0.
 checkCouple([Id|RestOfGuests] , T, Counter):-
 	Pos #= Counter,
+	
 	(	
-		(Pos #\= 5 , casado(Id,H) , element(Pos, T, Id) , PosD #= Pos + 1 ,element(PosD, T, H) , Counter1 #= Counter + 2) ;
-		(Pos #= 5 , casado(Id,H) , Counter1 #= Counter );
-		(\+ casado(Id,H) , element(Pos, T, Id) , Counter1 #= Counter + 1)
+		(Pos #\= L , casado(Id,H) , element(Pos, T, Id) , PosD #= Pos + 1 ,element(PosD, T, H) , Counter1 #= Counter + 2) ;
+		(Pos #= L , casado(Id,H) , Counter1 #= Counter ) ;
+		(\+ casado(Id,H)  , Counter1 #= Counter)
 	),
 	checkCouple(RestOfGuests, T, Counter1).
 
 
-quintinha(Guests, Table):-
-		length(Table, 5),
-		domain(Table, 1, 10),
-		all_distinct(Table),
-		checkCouple(Guests, Table , 1),
-		findall(N, countFriends(_ , Table, N), All),
+fillWithFriends(Table).
+fillWithFriends(Table):-
+	findall(N, countFriends(_ , Table, N), All),
+	maximum(Value, All),
+	countFriends(E, Table, Value),
+	element(_, Table, E),
+	fillWithFriends(Table).
 
-		maximize(countFriends(E , Table, N),N),
+
+
+quintinha(Guests, Table):-
+		checkCouple(Guests, Table , 1),
+		%findall(N, countFriends(_ , Table, N), All),
+		%maximum(Value, All),
+		%countFriends(E , Table, Value),
+		%element(_ , Table, E),
+		fillWithFriends(Table),
 		labeling([], Table).
 
 
+applyDist([], _).
+applyDist([H|T], Guests):-
+		quintinha(Guests, H),
+		applyDist(T, Guests).
+
+solve(Guests):-
+		length(Guests, Num),
+		tables(Num, Tables),
+		flatten(Tables, Tables1),
+		domain(Tables1, 1, 57),
+		all_distinct(Tables1),
+		applyDist(Tables, Guests),
+		write(Tables).
+
+
+
 test:- quintinha([1,2,4,5,6], T ), write(T).
+test1 :- solve([1,2,4,5,6,7,13,14,15,16,17,18,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37]).
+
+
 
 countFriendsForAll([],[_], Final, Final).
 countFriendsForAll([H|T],L, Result, Final):-
@@ -150,44 +174,18 @@ countFriends(E, [H|T], N):-
 
 
 
-entrypoint(NG):-
-    Range in 8..12, generateRandomList(NG, ListOfIds),
-    mesas(NG, Range, Mesas), length(Mesas,A), solve(Mesas, ListOfIdsm, A), flattenList(Mesas, R), all_distinct(R), labeling([], R), write(R).
-	 
+tables(NumberG, Tables) :- 
+   NumberT #= NumberG / 10,
+   generateTables(NumberT, 10,Tables).
 
 
-mesas(NG, Range, Mesas) :- 
-   NMesas #= NG / Range,
-   createList(NMesas, Mesas, Range).
-    
-solve(_,_,0).
-solve(Mesas, ListOfIds, Count):-
-	Count > 0,
-	nth1(Count, Mesas, Mesa),
-	perlist(Mesa, ListOfIds),
-	Count1 is Count -1,
-	solve(Mesas, ListOfIds, Count1).
+length_list(N, L) :- length(L, N) .
 
-perlist(Mesa, ListOfIds):-
-	length(Mesa, A), Chair in 1..A,
-	Chair2 in 1..A,
-	element(Chair, Mesa, Person),
-	element(Chair2, Mesa, Person2),
-	length(ListOfIds, B), IndexID1 in 1..B, IndexID2 in 1..B,
-	element(IndexID1, ListOfIds, Pr),
-	element(IndexID2, ListOfIds, Pr1),
-	IndexID1 #\= IndexID2,
-	Pr #= Pr1, Person #= IndexID1, Person2 = IndexID2.
+generateTables(N, V , Tables):-
+	length_list(N, Tables),
+	maplist(length_list(V), Tables).
 
-createList(0, List, _).
-createList(N, [A|B], Range):-
-    length(C, Range),
-    A = C, 
-    N1 is N -1,
-    createList(N1, B, Range).
-
-flattenList([], []).
-flattenList([Line | List], Result):-
-	is_list(Line), flattenList(Line, Result2), append(Result2, Tmp, Result), flattenList(List, Tmp).
-flattenList([Line | List], [Line | Result]):-
-	\+is_list(Line), flattenList(List, Result).
+flatten([],[]).
+flatten([HList|TList], Flat) :- 
+	flatten(TList, Rest) , 
+	append(HList,Rest, Flat), !.
