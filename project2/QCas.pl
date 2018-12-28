@@ -127,11 +127,7 @@ fillWithFriends(Table):-
 
 
 quintinha(Guests, Table):-
-		checkCouple(Guests, Table , 1),
-		%findall(N, countFriends(_ , Table, N), All),
-		%maximum(Value, All),
-		%countFriends(E , Table, Value),
-		%element(_ , Table, E),
+		checkCouple(Guests, Table, 1),
 		fillWithFriends(Table),
 		labeling([], Table).
 
@@ -148,8 +144,7 @@ solve(Guests):-
 		domain(Tables1, 1, 57),
 		all_distinct(Tables1),
 		applyDist(Tables, Guests),
-		write(Tables).
-
+		displayTables(Tables, 1).
 
 
 test:- quintinha([1,2,4,5,6], T ), write(T).
@@ -189,3 +184,10 @@ flatten([],[]).
 flatten([HList|TList], Flat) :- 
 	flatten(TList, Rest) , 
 	append(HList,Rest, Flat), !.
+
+
+displayTables([], _).
+displayTables([H|T], Counter):-
+		write('Table n'), write(Counter), write('  : '), write(H), nl,
+		Counter1 is Counter+1,
+		displayTables(T, Counter1).
