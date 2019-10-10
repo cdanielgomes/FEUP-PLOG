@@ -46,21 +46,86 @@ checkHorizontal([X, X, X, X, _], X).
 checkHorizontal([_, X, X, X, X], X).
 
 
-vert_win([B|T], Player) :- transpose([B|T], [M|N]), hor_win([M|N], Player). %nao se vai poder usar mas para ja fica
+vert_win([B|T], Player) :-
+    transpose([B|T], [M|N]),
+    hor_win([M|N], Player). %nao se vai poder usar mas para ja fica
+
+diagwin(Board, Player) :-
+    length(Board, Length),
+    \+diagAux1(Board, 0, 0, Length, Player),
+    \+diagAux2(Board, 0, 0, Length, Player),
+    \+diagAux3(Board, 0, 4, Length, Player),
+    \+diagAux4(Board, 0, 4, Length, Player).
+
+diagAux1(Board, X, Y, Length, Player) :-
+    diagADOWN(Board, X, Y, 0, Length, Player).
+diagAux1(Board, X, Y, Length, Player) :-
+    X1 is X+1,
+    diagAux1(Board, X1, Y, Length, Player).
+
+diagAux2(Board, X, Y, Length, Player) :-
+    diagADOWN(Board, X, Y, 0, Length, Player).
+diagAux2(Board, X, Y, Length, Player) :-
+    Y1 is Y+1,
+    diagAux2(Board, X, Y1, Length, Player).
+
+diagAux3(Board, X, Y, Length, Player) :-
+    diagBDOWN(Board, X, Y, 0, Length, Player).
+diagAux3(Board, X, Y, Length, Player) :-
+    X1 is X+1,
+    diagAux3(Board, X1, Y, Length, Player).
+
+diagAux4(Board, X, Y, Length, Player) :-
+    diagBDOWN(Board, X, Y, 0, Length, Player).
+diagAux4(Board, X, Y, Length, Player) :-
+    Y1 is Y-1,
+    diagAux4(Board, X, Y1, Length, Player).
 
 
-diagWin([B|T]).
 
-diagWinLR(Board, X, Y, Temp) :- nth0(Y, Board, Row), nth0(X, Row, Elem), X1 is X + 1, Y1 is Y + 1, append(Temp, [Elem], Temp2), diagWinLR(Board, X1, Y1, Temp2).
+diagADOWN(_, _, _, 4, _, _).
 
-diagWinLR(Board, X, Y, Temp) :- length(Temp, Int), Int >= 4.
+diagADOWN(Board, X, Y, Counter, Length, Player) :-
+    X<Length,
+    Y<Length,
+    nth0(X, Board, Row),
+    nth0(Y, Row, Elem),
+    Elem==Player,
+    Counter2 is Counter+1,
+    X1 is X+1,
+    Y1 is Y+1,
+    diagADOWN(Board, X1, Y1, Counter2, Length, Player).  
+
+diagADOWN(Board, X, Y, _, Length, Player) :-
+    X<Length,
+    Y<Length,
+    X1 is X+1,
+    Y1 is Y+1,
+    diagADOWN(Board, X1, Y1, 0, Length, Player).  
 
 
-seq4(_, _, 4, P) :- write(P).
+diagBDOWN(_, _, _, 4, _).
 
-seq4([F | T], F, Counter, _) :- F \= 0, Counter2 is Counter + 1, seq4(T, F, Counter2, F).  
+diagBDOWN(Board, X, Y, Counter, Length, Player) :-
+    Y>=0,
+    X<Length,
+    nth0(X, Board, Row),
+    nth0(Y, Row, Elem),
+    Elem==Player,
+    Counter2 is Counter+1,
+    X1 is X+1,
+    Y1 is Y-1,
+    diagBDOWN(Board, X1, Y1, Counter2, Length, Player).  
 
-seq4([F| T], _, Counter, _) :- Counter \= 4, Counter2 is 1, seq4(T, F, Counter2, F).  
+diagBDOWN(Board, X, Y, _, Length, Player) :- X < Length , Y >= 0, Y1 is Y - 1, X1 is X + 1, diagBDOWN(Board, X1, Y1, 0, Length,Player).  
+
+
+
+seq4(_, F, 4, P).
+
+seq4([F | T], F, Counter,_) :- F \= 0, Counter2 is Counter + 1, seq4(T, F, Counter2, F).  
+
+seq4([F| T], _, _,_) :- Counter2 is 1, seq4(T, F, Counter2, F).  
 
 
 
@@ -72,4 +137,12 @@ seq4([F| T], _, Counter, _) :- Counter \= 4, Counter2 is 1, seq4(T, F, Counter2,
 %                        [0, 0, 0, 0, 0],
 %                        [0, 0, 0, 0, 0]
 %                      ], 1 , 1, 1, [], N).
-% seq4([0,1,1,1,1,2,3,2,3],-1, 0, P).
+% seq4([0,1,1,1,1,2,3,2,3], P, 0, F).
+
+% diagwin([ [0, 0, 0, 0, 0],
+%     [0, 0, 0, 1, 0],
+%     [0, 0, 1, 0, 0],
+%     [0, 1, 0, 0, 0],
+%     [1, 0, 0, 0, 0]
+%   ], 1).
+ reload :- reconsult('logic.pl').
