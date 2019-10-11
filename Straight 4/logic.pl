@@ -147,12 +147,4 @@ diagBDOWN(Board, X, Y, _, Length, Player) :-
     diagBDOWN(Board, X1, Y1, 0, Length,Player).  
 
 
-
-seq4(_, F, 4, P).
-
-seq4([F | T], F, Counter,_) :- F \= 0, Counter2 is Counter + 1, seq4(T, F, Counter2, F).  
-
-seq4([F| T], _, _,_) :- Counter2 is 1, seq4(T, F, Counter2, F).  
-
-
  reload :- reconsult('logic.pl').
