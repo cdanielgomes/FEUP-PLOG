@@ -1,6 +1,5 @@
 :- include('display.pl').
 :- use_module(library(lists)).
-:- use_module(library(clpfd)).
 
 getPiece(Board, X, Y, Piece) :-
     nth0(X, Board, Elem),
@@ -35,34 +34,56 @@ setRow([F|T], X, Piece, TempRow, Row) :-
     setRow(T, X1, Piece, List, Row).
 
 
+%%%%% find a winner
+winner(Board, Player) :-
+    horizontal_win(Board, Player).
 
-hor_win([B|_], Player) :-
+winner(Board, Player) :-
+    vertical_win(Board, Player).
+
+winner(Board, Player) :-
+    \+ diagonal_win(Board, Player).
+
+horizontal_win([B|_], Player) :-
     checkHorizontal(B, Player).
 
-hor_win([_|T], Player) :-
-    hor_win(T, Player).
+horizontal_win([_|T], Player) :-
+    horizontal_win(T, Player).
 
 checkHorizontal([X, X, X, X, _], X).
 checkHorizontal([_, X, X, X, X], X).
 
+%transpose matrix
+tp([[]|_], []).
+tp(Board, [Row|Tail]) :-
+    transposeCol(Board, Row, RestBoard),
+    tp(RestBoard, Tail).
 
-vert_win([B|T], Player) :-
-    transpose([B|T], [M|N]),
-    hor_win([M|N], Player). %nao se vai poder usar mas para ja fica
+transposeCol([], [], []).
+transposeCol([[H|T]|Rows], [H|Hs], [T|Ts]) :-
+    transposeCol(Rows, Hs, Ts).
 
 
-
-diagwin(Board, Player) :-
+vertical_win([B|T], Player) :-
+    tp([B|T], [M|N]),
+    horizontal_win([M|N], Player). %nao se vai poder usar mas para ja fica
+diagonal_win(Board, Player) :-
     length(Board, Length),
-    (\+ diagAux1(Board, 0, 0, Length, Player),
+    \+ diagAux1(Board, 0, 0, Length, Player),
     \+ diagAux2(Board, 0, 1, Length, Player),
     \+ diagAux3(Board, 0, 4, Length, Player),
-    \+ diagAux4(Board, 0, 3, Length, Player)).
+    \+ diagAux4(Board, 0, 3, Length, Player).
    
+%% diagonal Left to Right UpBoard
 diagAux1(Board, X, Y, Length, Player) :-
     4=<Length-X,
     4=<Length-Y,
-    diagADOWN(Board, X, Y, 0, Length, Player).
+    check_seq4_left_right_up_down(Board,
+                                  X,
+                                  Y,
+                                  0,
+                                  Length,
+                                  Player).
 
 diagAux1(Board, X, Y, Length, Player) :-
     4=<Length-X,
@@ -70,10 +91,16 @@ diagAux1(Board, X, Y, Length, Player) :-
     X1 is X+1,
     diagAux1(Board, X1, Y, Length, Player).
 
+%% diagonal Left to Right Down Board
 diagAux2(Board, X, Y, Length, Player) :-
     4=<Length-X,
     4=<Length-Y,
-    diagADOWN(Board, X, Y, 1, Length, Player).
+    check_seq4_left_right_up_down(Board,
+                                  X,
+                                  Y,
+                                  1,
+                                  Length,
+                                  Player).
 
 diagAux2(Board, X, Y, Length, Player) :-
     4=<Length-X,
@@ -81,10 +108,16 @@ diagAux2(Board, X, Y, Length, Player) :-
     Y1 is Y+1,
     diagAux2(Board, X, Y1, Length, Player).
 
+%% diagonal Left to Right, Down to Up UpBoard
 diagAux3(Board, X, Y, Length, Player) :-
     Y>=3,
     X=<1,
-    diagBDOWN(Board, X, Y, 1, Length, Player).
+    check_seq4_left_right_down_up(Board,
+                                  X,
+                                  Y,
+                                  1,
+                                  Length,
+                                  Player).
 
 diagAux3(Board, X, Y, Length, Player) :-
     Y>=3,
@@ -92,10 +125,17 @@ diagAux3(Board, X, Y, Length, Player) :-
     X1 is X+1,
     diagAux3(Board, X1, Y, Length, Player).
 
+
+%% diagonal Left to Right, Down to UP  DownBoard
 diagAux4(Board, X, Y, Length, Player) :-
     Y>=3,
     X=<1,
-    diagBDOWN(Board, X, Y, 0, Length, Player).
+    check_seq4_left_right_down_up(Board,
+                                  X,
+                                  Y,
+                                  0,
+                                  Length,
+                                  Player).
 
 diagAux4(Board, X, Y, Length, Player) :-
     Y>=3,
@@ -105,9 +145,9 @@ diagAux4(Board, X, Y, Length, Player) :-
 
 
 
-diagADOWN(_, _, _, 4, _, _).
+check_seq4_left_right_up_down(_, _, _, 4, _, _).
 
-diagADOWN(Board, X, Y, Counter, Length, Player) :-
+check_seq4_left_right_up_down(Board, X, Y, Counter, Length, Player) :-
     X<Length,
     Y<Length,
     nth0(X, Board, Row),
@@ -116,19 +156,29 @@ diagADOWN(Board, X, Y, Counter, Length, Player) :-
     Counter2 is Counter+1,
     X1 is X+1,
     Y1 is Y+1,
-    diagADOWN(Board, X1, Y1, Counter2, Length, Player).  
+    check_seq4_left_right_up_down(Board,
+                                  X1,
+                                  Y1,
+                                  Counter2,
+                                  Length,
+                                  Player).  
 
-diagADOWN(Board, X, Y, _, Length, Player) :-
+check_seq4_left_right_up_down(Board, X, Y, _, Length, Player) :-
     X<Length,
     Y<Length,
     X1 is X+1,
     Y1 is Y+1,
-    diagADOWN(Board, X1, Y1, 0, Length, Player).  
+    check_seq4_left_right_up_down(Board,
+                                  X1,
+                                  Y1,
+                                  0,
+                                  Length,
+                                  Player).  
 
 
-diagBDOWN(_, _, _, 4, _, _).
+check_seq4_left_right_down_up(_, _, _, 4, _, _).
 
-diagBDOWN(Board, X, Y, Counter, Length, Player) :-
+check_seq4_left_right_down_up(Board, X, Y, Counter, Length, Player) :-
     Y>=0,
     X<Length,
     nth0(X, Board, Row),
@@ -137,14 +187,24 @@ diagBDOWN(Board, X, Y, Counter, Length, Player) :-
     Counter2 is Counter+1,
     X1 is X+1,
     Y1 is Y-1,
-    diagBDOWN(Board, X1, Y1, Counter2, Length, Player).  
+    check_seq4_left_right_down_up(Board,
+                                  X1,
+                                  Y1,
+                                  Counter2,
+                                  Length,
+                                  Player).  
 
-diagBDOWN(Board, X, Y, _, Length, Player) :- 
-    X < Length , 
-    Y >= 0, 
-    Y1 is Y - 1, 
-    X1 is X + 1, 
-    diagBDOWN(Board, X1, Y1, 0, Length,Player).  
+check_seq4_left_right_down_up(Board, X, Y, _, Length, Player) :-
+    X<Length,
+    Y>=0,
+    Y1 is Y-1,
+    X1 is X+1,
+    check_seq4_left_right_down_up(Board,
+                                  X1,
+                                  Y1,
+                                  0,
+                                  Length,
+                                  Player).  
 
-
- reload :- reconsult('logic.pl').
+ reload :-
+    reconsult('logic.pl').
