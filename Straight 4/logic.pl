@@ -218,13 +218,6 @@ move(Board, Xi, Yi, Xf, Yf, Player, NewBoard) :-
     setPiece(Board1, Xf, Yf, Player, [], NewBoard).
 
 
-% move( [ [0, 0, 0, 0, 0],
-%         [0, 0, 0, 0, 0],
-%         [0, 0, 0, 0, 0],
-%         [0, 0, 0, 0, 0],
-%         [0, 0, 0, 0, 1]
-%       ], 4,4,0,0,1, B).
-
 type_move(Board, Xi, Yi, Xf, Yf) :-
     VectorX is Xf-Xi,
     VectorY is Yf-Yi,
