@@ -1,11 +1,6 @@
 :- include('display.pl').
 :- use_module(library(lists)).
 
-getPiece(Board, X, Y, Piece) :-
-    nth0(X, Board, Elem),
-    nth0(Y, Elem, Piece).
-
-
 setPiece(Board, 0, 0, Temp, NewBoard) :-
     append(Temp, Board, NewBoard).
 
@@ -283,6 +278,10 @@ move_diagonally(Board, Xi, Yi, Xf, Yf) :-
     move_diagonally(Board, X1, Y1, Xf, Yf). 
      
 
+
+
+canInsert(Board, X,Y):-
+    nth0(Y, Board, P), nth0(X,P,Piece), Piece = 0.
 
 
 
