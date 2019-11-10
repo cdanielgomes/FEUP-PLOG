@@ -9,13 +9,14 @@ reload:- reconsult('straight4.pl').
 straight4:-
 	homeMenuHandler.
 
+%Inits Game Loop
 startGame(S1, S2):-
 	createEmptyBoard(5, Board),
 	displayGameBoard(Board),
 	startingPieces(N),
 	play(S1, S2, black, Board, [N,N]).
 
-
+%Player1 play
 play(Player1, Player2, black, Board, Pieces):-
 	nth0(0, Pieces, Blacks),
 	printBag(Blacks, black),
@@ -23,6 +24,7 @@ play(Player1, Player2, black, Board, Pieces):-
 	displayGameBoard(NewBoard),
 	nextMove(Player1, Player2, black, NewBoard, NewPieces).
 
+%Player2 play
 play(Player1, Player2, white, Board, Pieces):-
 	nth0(1, Pieces, Whites),
 	printBag(Whites, white),
@@ -35,15 +37,13 @@ human(Piece, Board, NewBoard, Pieces, NewPieces):-
 	inputPiece(Piece, Board, NewBoard),
 	removeFromBag(Piece, Pieces, NewPieces).
 
+% Checks for vitory before advance
 nextMove(_Player1, _Player2, Side, Board, _):-
 	convert(Side, S),
 	winner(Board, S),
 	victory(Side).
 
-nextMove(Player1, Player2, Side, Board, Pieces):-
-	changePlayer(Side, NewSide),
-	play(Player1, Player2, NewSide, Board, Pieces).
-
+% Changes player turn
 nextMove(Player1, Player2, Side, Board, Pieces):-
 	changePlayer(Side, NewSide),
 	play(Player1, Player2, NewSide, Board, Pieces).
