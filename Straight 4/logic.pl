@@ -1,4 +1,3 @@
-:- include('display.pl').
 :- use_module(library(lists)).
 
 getPiece(Board, X, Y, Piece) :-
