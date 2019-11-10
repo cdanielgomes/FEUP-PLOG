@@ -1,33 +1,25 @@
 :- use_module(library(lists)).
 
+%Fetch piece from board
 getPiece(Board, X, Y, Piece) :-
     nth0(X, Board, Elem),
     nth0(Y, Elem, Piece).
 
-
-setPiece(Board, 0, 0, Temp, NewBoard) :-
-    append(Temp, Board, NewBoard).
-
-
-setPiece([F|T], X, 0, Piece, Temp, NewBoard) :-
-    setRow(F, X, Piece, [], Row),
-    append(Temp, [Row], List),
-    setPiece(T, 0, 0, List, NewBoard).
-    
-setPiece([F|T], X, Y, Piece, Temp, NewBoard) :-
-    Y1 is Y-1,
-    append(Temp, [F], List1AndList2),
-    setPiece(T, X, Y1, Piece, List1AndList2, NewBoard).
+%Insert piece on board
+setPiece(Piece, Row, Col, Board, NewBoard) :-
+    isValidPosition(Row, Col, Board),
+    nth0(Row, Board, RowLine, TmpBoard),
+    nth0(Col, RowLine, _, TmpRowLine),
+    nth0(Col, NewRowLine, Piece, TmpRowLine),
+    nth0(Row, NewBoard, NewRowLine, TmpBoard).
 
 
-setRow([_|T], 0, Piece, TempRow, Row) :-
-    append(TempRow, [Piece], Row1),
-    append(Row1, T, Row).
-
-setRow([F|T], X, Piece, TempRow, Row) :-
-    append(TempRow, [F], List),
-    X1 is X-1,
-    setRow(T, X1, Piece, List, Row).
+%Checks if position is valid in current board and if is empty
+isValidPosition(Row, Col, Board):- !,
+  length(Board, L),
+  Row >= 0 , Col >= 0,
+  Row < L, Col < L,
+  getPiece(Board, Row, Col, 0).
 
 
 
@@ -281,10 +273,3 @@ move_diagonally(Board, Xi, Yi, Xf, Yf) :-
     Elem=0,
     move_diagonally(Board, X1, Y1, Xf, Yf). 
      
-
-
-
-
-
- reload :-
-    reconsult('logic.pl').

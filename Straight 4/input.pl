@@ -1,22 +1,26 @@
 :- use_module(library(lists)).
 
+
+% Fetches piece position and updates board with new piece
+inputPiece(Piece, Board, NewBoard):-
+	getPosition(Row, Col),
+	setPiece(Piece, Row, Col, Board, NewBoard), clearScreen.
+inputPiece(Piece, Board, NewBoard):-
+	nl, write('Invalid Play. Try again.'), nl,nl,
+	inputPiece(Piece,Board,NewBoard).
+
+
+% asks user for new piece position
+getPosition(Row, Col):-
+	getPieceRow(Row),
+	getPieceCol(Col), !.
+
 getInput(X,Y) :- getPieceRow(X), getPieceCol(Y).
 
 %waits for enter to continue
 getContinue:-
 	write('\nPress Enter to continue.\n'),
 	get_char(_).
-	
-
-%read char for column
-getCol(Col):-
-	read(Col),
-	integer(Col),
-	Col >= 0 , Col < 5.
-
-getCol(Col):-
-	write('Value is not between the board bounds :\n'),
-	getCol(Col).
 
 %gets row
 getPieceRow(Row):-
@@ -57,5 +61,19 @@ concactNumbersHelper([H|T], Multiplier, Final):-
 	concactNumbersHelper(T, MultiplierAux, FinalAux),
 	Final is (Multiplier * H + FinalAux).
 
+
+%'Press enter to continue'
+getEnter:-
+        write('Press enter to continue.'), nl,
+        getChar(_Input).
+
+getChar(Input):-
+	get_char(KbInput),
+	enter(KbInput, Input).
+enter('\n', ''):-!.
+/*enter(_, Input):-
+	getChar(Input).*/
 	
-	
+invalidInput:-
+    write('Invalid option.'), nl,
+    getEnter.

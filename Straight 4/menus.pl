@@ -41,11 +41,12 @@ homeMenuHandler:-
 
 homeMenuOption(1):-
 	gameMenuHandler.
-/*HomeMenuOption(2):-
-	gameMenu.
-HomeMenuOption(3):-
-	gameMenu.
-HomeMenuOption(_):-*/
+/*homeMenuOption(2):-
+	gameMenu.*/
+homeMenuOption(3).
+homeMenuOption(_):-
+	invalidInput,
+	homeMenuHandler, !.
 
 %----game menu handler -> user choose game mode							
 gameMenuHandler:-                   
@@ -54,5 +55,6 @@ gameMenuHandler:-
 	gameMenuOption(Option).
 
 gameMenuOption(1):-
+	clearScreen,
 	startGame(human, human), !,
 	homeMenuHandler.	
