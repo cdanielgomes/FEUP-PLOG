@@ -16,7 +16,7 @@ startGame(S1, S2):-
 	startingPieces(N),
 	play(S1, S2, black, Board, [N,N]).
 
-%Player1 play
+%Player1 plays
 play(Player1, Player2, black, Board, Pieces):-
 	nth0(0, Pieces, Blacks),
 	printBag(Blacks, black),
@@ -24,7 +24,7 @@ play(Player1, Player2, black, Board, Pieces):-
 	displayGameBoard(NewBoard),
 	nextMove(Player1, Player2, black, NewBoard, NewPieces).
 
-%Player2 play
+%Player2 plays
 play(Player1, Player2, white, Board, Pieces):-
 	nth0(1, Pieces, Whites),
 	printBag(Whites, white),

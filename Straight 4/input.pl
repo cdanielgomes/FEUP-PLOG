@@ -30,7 +30,7 @@ getPieceRow(Row):-
 
 %gets column
 getPieceCol(Col):-
-	write('Select collumn:'), nl,
+	write('Select column:'), nl,
 	getInt(C), Col is C.
 
 
