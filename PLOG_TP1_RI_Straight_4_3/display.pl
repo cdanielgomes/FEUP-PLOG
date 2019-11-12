@@ -1,11 +1,9 @@
 convert(0, 11038).
 convert(1, 9899).
 convert(2, 9898).
-convert(black, 1).
-convert(white, 2).
 
 startHorizontalIdent(Size):-
-    write('\t   '),
+    write('   '),
     printHorizontalIdent(1, Size).
 
 printHorizontalIdent(Count, Size) :-
@@ -39,7 +37,6 @@ displayLine([Head|Tail], Acc) :-
     displayLine(Tail, Acc2).
 
 startRowDivider(Acc, Line):-
-    write('\t'),
     printRowDivider(Acc, Line).
 
 printRowDivider(0, _).
@@ -53,7 +50,6 @@ printRowDivider(Acc, Line):-
 
 displayBoard([], _). 
 displayBoard([Firstline|Tail], Line) :-
-    write('\t'),
     write(Line),
     write('  '),
     displayLine(Firstline, 0), nl,
@@ -61,22 +57,6 @@ displayBoard([Firstline|Tail], Line) :-
     Line2 is Line+1,
     nl,
     displayBoard(Tail, Line2).
-
-
-printBag(0, Side):-
-    write('Player '), write(Side), write(' Bag: none'), nl.
-printBag(NumPieces, Side):-
-    write('Player '), write(Side), write(' Bag: '),
-    convert(Side, Piece),
-    convert(Piece, Code),
-    printPieces(NumPieces, Code), nl.
-
-printPieces(0, _).
-printPieces(NumPieces, Piece):-
-    put_code(Piece),
-    write(' '),
-    NumPieces1 is NumPieces - 1,
-    printPieces(NumPieces1, Piece).
 
 
 

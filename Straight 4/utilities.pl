@@ -1,46 +1,40 @@
-:- use_module(library(random)).
-:- use_module(library(lists)).
-% new lines to simulate clearscreen
-clearScreen :-
-	printBlank(7).
+% new lines to simulate console clear
+clearScreen:-
+	clearScreen(10).
+clearScreen(0).
 
 % print new lines
-printBlank(A) :-
-	A > 0,
+clearScreen(A) :-
 	nl,
 	A1 is A - 1,
-	printBlank(A1).
-	
-printBlank(_).
+	clearScreen(A1).
+
+%changes player
+changePlayer(black, white).
+changePlayer(white, black).
+
+%Number of pieces each player start with
+startingPieces(4).
 
 
-%waits for enter to continue
-getContinue:-
-	write('\nPress Enter to continue.\n'),
-	get_char(_).
-	
-
-%change type (player)
-changeType(1, 2).
-changeType(2, 1).
-
-
-%% Size = Size of the Board
-%% Board - return of the board
-
-createEmptyBoard(Size, Board):- 
-    create_line(0, Size, A),
-    length(Board, Size),
-    maplist(=(A), Board).
-
-%%% X - Symbol to be insert in every position of List
-%%% N - Size of a line 
-%%% List - Return of a line
+%% Size = Size of the Board 
+%% Board - return of the board  
+createEmptyBoard(Size, Board):-  
+    create_line(0, Size, A), 
+    length(Board, Size), 
+    maplist(=(A), Board). 
 
 create_line(X, N, List)  :- 
     length(List, N), 
     maplist(=(X), List).
 
 
-%fast reconsult
-%%reload:- reconsult('straight4.pl').
+removeFromBag(2, [_,0], [_,0]).
+removeFromBag(1, [0,_], [0,_]).
+removeFromBag(1 , [Blacks, _Whites], R):-
+	NewBlacks is Blacks - 1,
+	append([NewBlacks], [_Whites], R).
+
+removeFromBag(2 , [_Blacks, Whites], R):-
+	NewWhites is Whites - 1,
+	append([_Blacks], [NewWhites], R).
