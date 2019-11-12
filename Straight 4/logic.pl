@@ -237,11 +237,11 @@ can_move(Board, 0, _, Xi, Yi, _, Yf) :-
     move_horizontally(Board, Xi, Yi, Yf).
 
 can_move(Board, _, _, Xi, Yi, Xf, Yf) :-
-   % Xf-Xi=:=Yf-Yi,
+    abs(Xf-Xi)=:=abs(Yf-Yi),
     move_diagonally(Board, Xi, Yi, Xf, Yf).
 
 
-move_vertically(_, _, Xf, Xf).
+move_vertically(_, _, Xi, Xf):- Xi =:= Xf, !.
 
 move_vertically(Board, Y, Xi, Xf) :-
     Sum is (Xf-Xi)div abs(Xf-Xi),
@@ -252,7 +252,7 @@ move_vertically(Board, Y, Xi, Xf) :-
     move_vertically(Board, Y, X1, Xf). 
      
 
-move_horizontally(_, _, Yf, Yf).
+move_horizontally(_, _, Yi, Yf):- Yi =:= Yf, !.
 
 move_horizontally(Board, X, Yi, Yf) :-
     Sum is (Yf-Yi)div abs(Yf-Yi),
@@ -265,8 +265,7 @@ move_horizontally(Board, X, Yi, Yf) :-
 
 
 % ends when Xi = Xf and Yf = Yi
-%move_diagonally(_, Xi, Xf, Yi, Yf) :- (Xi-Yi) = (Xf-Yf).
-move_diagonally(_, Xf, Yf, Xf, Yf).
+move_diagonally(_, Xi, Yi, Xf, Yf):- Xi =:= Xf, Yi =:= Yf, !.
 
 
 move_diagonally(Board, Xi, Yi, Xf, Yf) :-

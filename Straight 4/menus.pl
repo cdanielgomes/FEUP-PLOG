@@ -57,4 +57,19 @@ gameMenuHandler:-
 gameMenuOption(1):-
 	clearScreen,
 	startGame(human, human), !,
-	homeMenuHandler.	
+	homeMenuHandler.
+
+gameMenuOption(2):-
+	cpMenuHandler.
+
+%---ai menu handler -> user choose ai mode
+
+cpMenuHandler:-
+	cpMenu,
+	getInt(Option),
+	cpMenuOption(Option).
+
+cpMenuOption(1):-
+	clearScreen,
+	startGame(human, randomPlayPositioning), !,
+	homeMenuHandler.
