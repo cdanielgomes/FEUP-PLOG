@@ -272,19 +272,4 @@ move_diagonally(Board, Xi, Yi, Xf, Yf) :-
     nth0(Y1, Row, Elem),
     Elem=0,
     move_diagonally(Board, X1, Y1, Xf, Yf). 
-<<<<<<< HEAD
      
-
-
-
-canInsert(Board, X,Y):-
-    nth0(Y, Board, P), nth0(X,P,Piece), Piece = 0.
-
-
-
-
- reload :-
-    reconsult('logic.pl').
-=======
-     
->>>>>>> f37f71c0f356695dba7feeec8d332c163fb70662
