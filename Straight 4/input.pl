@@ -10,6 +10,17 @@ inputPiece(Piece, Board, NewBoard):-
 	inputPiece(Piece,Board,NewBoard).
 
 
+movePiece(Piece, Board, NewBoard):-
+	write('MAKE A MOVE!'),nl,nl,
+	write('Select piece'), nl, nl,
+	getPosition(Rowi, Coli),nl,
+	write('Move piece to'), nl, nl,
+	getPosition(Rowf, Colf), 
+	move(Board, Rowi, Coli, Rowf, Colf, Piece, NewBoard).
+movePiece(Piece, Board, NewBoard):-
+	nl, write('Invalid Play. Try again.'), nl,nl,
+	movePiece(Piece, Board, NewBoard).
+
 % asks user for new piece position
 getPosition(Row, Col):-
 	getPieceRow(Row),

@@ -37,6 +37,8 @@ human(Piece, Board, NewBoard, Pieces, NewPieces):-
 	inputPiece(Piece, Board, NewBoard),
 	removeFromBag(Piece, Pieces, NewPieces).
 
+%human_moving(Piece, Board, NewBoard, Pieces, NewPieces):-
+
 % Checks for vitory before advance
 nextMove(_Player1, _Player2, Side, Board, _):-
 	convert(Side, S),
@@ -53,10 +55,9 @@ victory(Side):-
 	getEnter.
 
 
-test:-
-	getPiece([ [0, 0, 0, 2, 0],
-                       [0, 1, 2, 0, 0],
-                       [0, 2, 1, 0, 0],
-                       [2, 0, 1, 0, 0],
-                       [0, 0, 1, 0, 0]
-                     ],0, 0, 1).
+test:-  movePiece(1, [ [0, 0, 0, 2, 0],
+               [0, 1, 2, 0, 0],
+               [0, 2, 1, 0, 0],
+               [0, 0, 1, 0, 0],
+               [0, 0, 1, 0, 0]
+             ], N), write(N).

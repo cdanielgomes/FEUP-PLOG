@@ -13,6 +13,12 @@ setPiece(Piece, Row, Col, Board, NewBoard) :-
     nth0(Col, NewRowLine, Piece, TmpRowLine),
     nth0(Row, NewBoard, NewRowLine, TmpBoard).
 
+forceSetPiece(Piece, Row, Col, Board, NewBoard) :-
+    nth0(Row, Board, RowLine, TmpBoard),
+    nth0(Col, RowLine, _, TmpRowLine),
+    nth0(Col, NewRowLine, Piece, TmpRowLine),
+    nth0(Row, NewBoard, NewRowLine, TmpBoard).
+
 
 %Checks if position is valid in current board and if is empty
 isValidPosition(Row, Col, Board):- !,
@@ -87,7 +93,7 @@ diagAux2(Board, X, Y, Length, Player) :-
     check_seq4_left_right_up_down(Board,
                                   X,
                                   Y,
-                                  1,
+                                  0,
                                   Length,
                                   Player).
 
@@ -205,8 +211,8 @@ move(Board, Xi, Yi, Xf, Yf, Player, NewBoard) :-
     nth0(Xf, Row2, Elemf),
     Elemf=0,
     type_move(Board, Xi, Yi, Xf, Yf),
-    setPiece(Board, Xi, Yi, 0, [], Board1),
-    setPiece(Board1, Xf, Yf, Player, [], NewBoard).
+    forceSetPiece(0, Xi, Yi, Board, Board1),
+    setPiece(Player, Xf, Yf, Board1, NewBoard).
 
 
 type_move(Board, Xi, Yi, Xf, Yf) :-
@@ -260,7 +266,7 @@ move_horizontally(Board, Y, Xi, Xf) :-
 
 % ends when Xi = Xf and Yf = Yi
 %move_diagonally(_, Xi, Xf, Yi, Yf) :- (Xi-Yi) = (Xf-Yf).
-move_diagonally(_, Xi, Yi, Xi, Yi).
+move_diagonally(_, Xf, Yf, Xf, Yf).
 
 
 move_diagonally(Board, Xi, Yi, Xf, Yf) :-
