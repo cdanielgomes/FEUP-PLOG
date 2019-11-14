@@ -1,5 +1,3 @@
-reload:- reconsult('straight4.pl').
-
 :-include('menus.pl').
 :-include('display.pl').
 :-include('utilities.pl').
@@ -9,6 +7,7 @@ reload:- reconsult('straight4.pl').
 :-include('minimax.pl').
 :-include('streak.pl').
 
+%Init game Menu
 straight4:-
 	homeMenuHandler.
 
@@ -19,7 +18,7 @@ startGame(S1, S2):-
 	startingPieces(N),
 	play(S1, S2, black, Board, [N,N]).
 
-%Player1 plays
+%Player1 Turn
 play(Player1, Player2, black, Board, Pieces):-
 	nth0(0, Pieces, Blacks),
 	printBag(Blacks, black),
@@ -27,7 +26,7 @@ play(Player1, Player2, black, Board, Pieces):-
 	displayGameBoard(NewBoard),
 	nextMove(Player1, Player2, black, NewBoard, NewPieces).
 
-%Player2 plays
+%Player2 Turn
 play(Player1, Player2, white, Board, Pieces):-
 	nth0(1, Pieces, Whites),
 	printBag(Whites, white),
@@ -35,7 +34,7 @@ play(Player1, Player2, white, Board, Pieces):-
 	displayGameBoard(NewBoard),
 	nextMove(Player1, Player2, white, NewBoard, NewPieces).
 
-% Human input piece (choosing row and column)
+%Human input piece (choosing row and column)
 human(Piece,Board, NewBoard, [0,0], _NewPieces):-
 	movePiece(Piece, Board, NewBoard).
 human(Piece, Board, NewBoard, Pieces, NewPieces):-
@@ -55,26 +54,7 @@ nextMove(Player1, Player2, Side, Board, Pieces):-
 	play(Player1, Player2, NewSide, Board, Pieces).
 
 
+%Prints winner
 victory(Side):-
 	printWin(Side),
 	getEnter.
-
-/*test:- move([[1, 1, 1, 1, 1],
-      		 [1, 1, 1, 1, 1],
-             [2, 1, 1, 1, 2],
-             [1, 1, 1, 1, 0],
-             [1, 1, 1, 0, 0]], 3, 2, 2, 3, 1, NewBoard), write(NewBoard).*/
-
-test1:- getPiece([ [0, 0, 0, 2, 0],
-               		 [0, 1, 2, 0, 0],
-               		 [0, 2, 1, 0, 0],
-                     [0, 0, 1, 0, 0],
-                     [0, 0, 1, 0, 0]
-                   ], 1, 2, P), write(P).
-
-test2:- getPossibleMoves(1, [[1, 1, 1, 1, 1],
-       		  				 [1, 1, 1, 1, 1],
-                             [2, 1, 1, 1, 2],
-                             [1, 1, 1, 1, 0],
-                             [1, 1, 1, 0, 0]
-                            ], A), write(A).

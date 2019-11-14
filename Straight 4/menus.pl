@@ -1,3 +1,4 @@
+%Prints Menu
 homeMenu:-
 	printGameTitle,
 	write('\t\t+-------------------------------------+'),nl,
@@ -9,6 +10,7 @@ homeMenu:-
 	write('\t\t+-------------------------------------+'),nl,nl,
 	write('Choose your prefered option : ').
 
+%Prints Game Options
 gameMenu:-
 	printGameTitle,
 	write('\t\t+-------------------------------------+'),nl,
@@ -21,6 +23,7 @@ gameMenu:-
 	write('\t\t+-------------------------------------+'),nl,nl,
 	write('Choose your prefered option : ').
 
+%Prints Ai Difficulty
 cpMenu:-
 	printGameTitle,
 	write('\t\t+-------------------------------------+'),nl,
@@ -33,6 +36,27 @@ cpMenu:-
 	write('Choose your prefered option : ').
 
 
+%Prints Game Rules
+rules:- printGameTitle,
+	write('RULES: '), nl,
+	write('\tThe game uses a board like GoRoGo board where the players'), nl, 
+	write('\tcan put their pieces on the intersections.'), nl,
+	write('\tThe game has very very simple rules with 2 phases: Positioning'),nl,
+	write('\tand Moving.'), nl,
+	write('    Positioning:'), nl,
+	write('\tEach player starts with 4 pieces and they have to put them all'), nl,
+	write('\talternately in the intersections of the board before advance to'), nl,
+	write('\tthe next phase.'),nl,
+	write('    Moving:'), nl,
+	write('\tHaving each player placed 4 pieces on the board. They can now move them,'),nl,
+	write('\tone piece per round, in order to get a straight line of 4 pieces.'),nl,
+	write('    Win:'), nl,
+	write('\tThere is only one way to win, same for White and Black: form an unbroken'),nl,
+	write('\tchain of 4 consecutive friendly stones - vertically, horizontally'),nl,
+	write('\tor diagonally.'), nl,nl,
+	getEnter.
+
+
 %----main menu handler
 homeMenuHandler:-
 	homeMenu,
@@ -41,8 +65,11 @@ homeMenuHandler:-
 
 homeMenuOption(1):-
 	gameMenuHandler.
-/*homeMenuOption(2):-
-	gameMenu.*/
+
+homeMenuOption(2):-
+	rules,
+	homeMenuHandler,!.
+
 homeMenuOption(3).
 homeMenuOption(_):-
 	invalidInput,

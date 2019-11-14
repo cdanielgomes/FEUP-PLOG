@@ -9,7 +9,8 @@ inputPiece(Piece, Board, NewBoard):-
 	nl, write('Invalid Play. Try again.'), nl,nl,
 	inputPiece(Piece,Board,NewBoard).
 
-
+%Moves Piece in Board regarding the user input for (Xi, Yi, Xf, Yf),
+%returning the NewBoard (after piece movement).
 movePiece(Piece, Board, NewBoard):-
 	write('MAKE A MOVE!'),nl,nl,
 	write('Select piece'), nl, nl,
@@ -21,11 +22,12 @@ movePiece(Piece, Board, NewBoard):-
 	nl, write('Invalid Play. Try again.'), nl,nl,
 	movePiece(Piece, Board, NewBoard).
 
-% asks user for new piece position
+%Asks user to select a position.
 getPosition(Row, Col):-
 	getPieceRow(Row),
 	getPieceCol(Col), !.
 
+%Fetches user input for Row and Column
 getInput(X,Y) :- getPieceRow(X), getPieceCol(Y).
 
 %waits for enter to continue
@@ -46,7 +48,6 @@ getPieceCol(Col):-
 
 
 %------get user Input
-
 getInt(Input):-
 	getNextCodeLoop([], Characters),
 	concactNumbers(Characters, Input).

@@ -4,6 +4,7 @@ convert(2, 9898).
 convert(black, 1).
 convert(white, 2).
 
+%Horizontal label
 startHorizontalIdent(Size):-
     write('\t   '),
     printHorizontalIdent(1, Size).

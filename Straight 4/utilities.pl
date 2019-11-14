@@ -31,6 +31,8 @@ create_line(X, N, List)  :-
     maplist(=(X), List).
 
 
+%% Updates the bags of players
+%% If the players as pieces the bag becomes bag-1piece.
 removeFromBag(2, [_,0], [_,0]).
 removeFromBag(1, [0,_], [0,_]).
 removeFromBag(1 , [Blacks, _Whites], R):-
@@ -40,3 +42,6 @@ removeFromBag(1 , [Blacks, _Whites], R):-
 removeFromBag(2 , [_Blacks, Whites], R):-
 	NewWhites is Whites - 1,
 	append([_Blacks], [NewWhites], R).
+
+
+reload:- reconsult('straight4.pl').

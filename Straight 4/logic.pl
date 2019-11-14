@@ -5,7 +5,8 @@ getPiece(Board, X, Y, Piece) :-
     nth0(X, Board, Elem),
     nth0(Y, Elem, Piece).
 
-%Insert piece on board
+%Insert piece on Board , Board[Row][Col]
+%only it it is a valid position
 setPiece(Piece, Row, Col, Board, NewBoard) :-
     isValidPosition(Row, Col, Board),
     nth0(Row, Board, RowLine, TmpBoard),
@@ -13,6 +14,8 @@ setPiece(Piece, Row, Col, Board, NewBoard) :-
     nth0(Col, NewRowLine, Piece, TmpRowLine),
     nth0(Row, NewBoard, NewRowLine, TmpBoard).
 
+%Insert piece on Board, Board[Row][Col]
+%Even is its not an empty position
 forceSetPiece(Piece, Row, Col, Board, NewBoard) :-
     nth0(Row, Board, RowLine, TmpBoard),
     nth0(Col, RowLine, _, TmpRowLine),
