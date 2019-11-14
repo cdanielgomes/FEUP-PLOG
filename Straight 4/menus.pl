@@ -60,10 +60,44 @@ gameMenuOption(1):-
 	homeMenuHandler.
 
 gameMenuOption(2):-
+	singleMenuHandler.
+
+gameMenuOption(3):-
 	cpMenuHandler.
+
+gameMenuOption(4):-
+	homeMenuHandler.
+
+gameMenuOption(_):-
+	invalidInput,
+	homeMenuHandler, !.
 
 %---ai menu handler -> user choose ai mode
 
+singleMenuHandler:-
+	cpMenu,
+	getInt(Option),
+	singleMenuOption(Option).
+
+singleMenuOption(1):-
+	clearScreen,
+	startGame(human, randomPlay), !,
+	homeMenuHandler.
+
+singleMenuOption(2):-
+	clearScreen,
+	startGame(human, smartPlay), !,
+	homeMenuHandler.
+
+singleMenuOption(3):-
+	gameMenuHandler.
+
+singleMenuOption(_):-
+	invalidInput,
+	singleMenuHandler, !.
+
+
+%--- ai vs ai menu handler 
 cpMenuHandler:-
 	cpMenu,
 	getInt(Option),
@@ -71,5 +105,17 @@ cpMenuHandler:-
 
 cpMenuOption(1):-
 	clearScreen,
-	startGame(human, randomPlayPositioning), !,
+	startGame(randomPlay, randomPlay), !,
 	homeMenuHandler.
+
+cpMenuOption(2):-
+	clearScreen,
+	startGame(smartPlay, smartPlay), !,
+	homeMenuHandler.
+
+cpMenuOption(3):-
+	gameMenuHandler.
+
+cpMenuOption(_):-
+	invalidInput,
+	cpMenuHandler, !.

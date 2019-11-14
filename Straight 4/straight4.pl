@@ -6,6 +6,8 @@ reload:- reconsult('straight4.pl').
 :-include('logic.pl').
 :-include('input.pl').
 :-include('ai.pl').
+:-include('minimax.pl').
+:-include('streak.pl').
 
 straight4:-
 	homeMenuHandler.
@@ -57,11 +59,11 @@ victory(Side):-
 	printWin(Side),
 	getEnter.
 
-test:- move([[1, 1, 1, 1, 1],
+/*test:- move([[1, 1, 1, 1, 1],
       		 [1, 1, 1, 1, 1],
              [2, 1, 1, 1, 2],
              [1, 1, 1, 1, 0],
-             [1, 1, 1, 0, 0]], 3, 2, 2, 3, 1, NewBoard), write(NewBoard).
+             [1, 1, 1, 0, 0]], 3, 2, 2, 3, 1, NewBoard), write(NewBoard).*/
 
 test1:- getPiece([ [0, 0, 0, 2, 0],
                		 [0, 1, 2, 0, 0],

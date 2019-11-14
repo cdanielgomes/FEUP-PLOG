@@ -110,7 +110,7 @@ diagAux3(Board, X, Y, Length, Player) :-
     check_seq4_left_right_down_up(Board,
                                   X,
                                   Y,
-                                  1,
+                                  0,
                                   Length,
                                   Player).
 

@@ -12,9 +12,11 @@ clearScreen(A) :-
 %changes player
 changePlayer(black, white).
 changePlayer(white, black).
-
+changePlayer(1, 2).
+changePlayer(2, 1).
 %Number of pieces each player start with
 startingPieces(4).
+
 
 
 %% Size = Size of the Board 
