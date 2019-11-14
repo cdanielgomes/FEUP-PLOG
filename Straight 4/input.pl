@@ -12,9 +12,12 @@ inputPiece(Piece, Board, NewBoard):-
 %Moves Piece in Board regarding the user input for (Xi, Yi, Xf, Yf),
 %returning the NewBoard (after piece movement).
 movePiece(Piece, Board, NewBoard):-
+	nl,
 	write('MAKE A MOVE!'),nl,nl,
 	write('Select piece'), nl, nl,
 	getPosition(Rowi, Coli),nl,
+	clearScreen,
+	displayGameBoard(Board), nl,
 	write('Move piece to'), nl, nl,
 	getPosition(Rowf, Colf), 
 	move(Board, Rowi, Coli, Rowf, Colf, Piece, NewBoard).
