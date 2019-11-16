@@ -97,7 +97,7 @@ gameMenuOption(4):-
 
 gameMenuOption(_):-
 	invalidInput,
-	homeMenuHandler, !.
+	gameMenuHandler, !.
 
 %---ai menu handler -> user choose ai mode
 

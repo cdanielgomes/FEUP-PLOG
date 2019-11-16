@@ -80,7 +80,9 @@ concactNumbersHelper([H|T], Multiplier, Final):-
 %'Press enter to continue'
 getEnter:-
         write('Press enter to continue.'), nl,
-        getChar(_Input).
+        getChar(Input),
+        Input == ''.
+getEnter:- getEnter.
 
 getChar(Input):-
 	get_char(KbInput),
