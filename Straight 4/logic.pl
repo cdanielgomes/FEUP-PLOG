@@ -32,13 +32,15 @@ isValidPosition(Row, Col, Board):- !,
 
 
 
-%%%%% find a winner
+%%%%% find if the player Player win by horizontal line
 winner(Board, Player) :-
     horizontal_win(Board, Player).
 
+%%%%% find if the player Player win by vertical line
 winner(Board, Player) :-
     vertical_win(Board, Player).
 
+%%%%% find if the player Player win by diagonal line
 winner(Board, Player) :-
     \+ diagonal_win(Board, Player).
 
@@ -65,6 +67,8 @@ transposeCol([[H|T]|Rows], [H|Hs], [T|Ts]) :-
 vertical_win([B|T], Player) :-
     tp([B|T], [M|N]),
     horizontal_win([M|N], Player). %nao se vai poder usar mas para ja fica
+
+%% search in each diagonal of the board for a sequence of 4 equal pieces
 diagonal_win(Board, Player) :-
     length(Board, Length),
     \+ diagAux1(Board, 0, 0, Length, Player),
@@ -205,7 +209,7 @@ check_seq4_left_right_down_up(Board, X, Y, _, Length, Player) :-
                                   Player).  
 
 
-
+%% validate and moves a piece
 move(Board, Xi, Yi, Xf, Yf, Player, NewBoard) :-
     nth0(Xi, Board, Row),
     nth0(Yi, Row, Elemi),
@@ -218,6 +222,9 @@ move(Board, Xi, Yi, Xf, Yf, Player, NewBoard) :-
     setPiece(Player, Xf, Yf, Board1, NewBoard).
 
 
+%% will find the direction of the movement
+%% and will select what can_move will selected
+%% based on the direction
 type_move(Board, Xi, Yi, Xf, Yf) :-
     VectorX is Xf-Xi,
     VectorY is Yf-Yi,
@@ -229,7 +236,7 @@ type_move(Board, Xi, Yi, Xf, Yf) :-
              Xf,
              Yf).
 
-
+%%  can_move will select directions to be analysed
 can_move(_, 0, 0, _, _, _, _, _) :-
     fail.
 
@@ -243,6 +250,9 @@ can_move(Board, _, _, Xi, Yi, Xf, Yf) :-
     abs(Xf-Xi)=:=abs(Yf-Yi),
     move_diagonally(Board, Xi, Yi, Xf, Yf).
 
+
+%% check for each direction if there are no pieces 
+%% between the given positions
 
 move_vertically(_, _, Xi, Xf):- Xi =:= Xf, !.
 

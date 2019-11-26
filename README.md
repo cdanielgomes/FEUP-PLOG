@@ -1,5 +1,5 @@
 # PLOG
 FEUP
 
-Carlos Daniel Coelho Ferreira Gomes 
-João Carlos Parada Alves
+TP1: Straight4
+TP2: MiddleSum
