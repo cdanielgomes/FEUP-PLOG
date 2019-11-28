@@ -2,6 +2,17 @@
 
 
 /**
+ * generate_matrix(+Ńr, +Nc, -Matrix)
+ * 	Creates a Nr*Nc matrix.
+ */
+generate_matrix(0, _, []).
+generate_matrix(Nr, Nc, [H|T]):-
+	Nr > 0,
+	N1 is Nr - 1,
+	length(H, Nc),
+	generate_matrix(N1, Nc, T).
+
+/**
  *	matrix_lists(+Matrix, -Lists).
  * 		Fetches all the rows and columns of the given Matrix
  * 		combining them in a list.
