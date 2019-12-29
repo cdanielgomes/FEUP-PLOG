@@ -1,14 +1,13 @@
-:- use_module(library(lists)).
-:- use_module(library(clpfd)).
-:- include('matrix.pl').
-
+:- use_module(library(lists)). 
+:- use_module(library(clpfd)). 
+:- include('matrix.pl'). 
 
 /**
  * flatten(+L, -Flat)
  *   Fails if L is not a list of lists
  */
 flatten([], []).
-flatten([HList|TList], Flat) :- 
+flatten([HList|TList], Flat):- 
 	flatten(TList, Rest),
     append(HList, Rest, Flat), !.
 
@@ -95,9 +94,15 @@ middle_sum_matrix(Matrix, Vars):-
 	transpose(A,B),
 	flatten(A, Vars),
 	domain(Vars, 0, 9),
-	labeling([], Vars).
+	reset_timer,
+	labeling([min], Vars),
+	print_time.
 
-
+reset_timer :- statistics(walltime, _).
+print_time :-
+  statistics(walltime, [_,T]),
+  TS is ((T//10)*10)/1000,
+  nl, format('Time: ~10fs ~n~n', [TS]).
 
 
 /** 
@@ -120,32 +125,5 @@ list2matrix(List, RowSize, Matrix) :-
     append(Matrix, List).
 
 
-
-
-
-b:- write([[0,0,0,0,0,2,0],
-	       [0,0,0,9,0,0,0],
-	       [5,0,0,0,0,0,0],
-	       [0,0,4,0,0,0,0],
-	       [0,0,0,0,0,0,8],
-	       [0,4,0,0,0,0,0],
-	       [0,0,0,0,4,0,0]]).
-
-
-
-a:- middle_sum_matrix([[0,0,0,2],
-	       [0,9,0,0],
-	       [7,0,0,0],
-	       [0,0,3,0]], L), list2matrix(L, 4, M), write(M).
-
-t:- middle_sum_matrix([[0,0,0,2],
-	       [0,9,0,0],
-	       [7,0,0,0],
-	       [0,0,3,0]], N), write(N).
-
-e:- middle_sum_list([0,0,0,2], L), write(L).
-
-
-reload:- reconsult('list.pl').
 
 
