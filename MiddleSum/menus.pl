@@ -4,6 +4,8 @@
  */
 
 :- include('middle_sum.pl').
+:- include('random.pl').
+:- include('boards.pl').
 
 title:- 
 	write('================================================================'),nl,
@@ -19,20 +21,90 @@ footer:-
 main_menu:-
 	title,
 	write('\t\t1- Generate Random Board'), nl,
- 	write('\t\t2- Write Board'), nl, nl,
+	write('\t\t2- Write Board'), nl,
+ 	write('\t\t3- Choose a Board'), nl, nl,
     write('\t\t0- Exit'), nl,
     footer,
     user_input(Input),
     handle_input(Input).
 
+random_menu:-
+	title,
+	write('\t\t1- Random Size'), nl,
+	write('\t\t2- Write Board Size'), nl,nl,
+    write('\t\t0- back'), nl,
+	footer,
+	user_input(Input),
+	handle_input_random_menu(Input).
 
 
-handle_input(1).
+showAllBoards:- nl,nl,
+write('0- Back'), nl,nl,
+write('1- ') , nl, board4(A), printBoard(A),nl,
+write('2- ') , nl, board5(B), printBoard(B),nl,
+write('3- ') , nl, board6(C), printBoard(C),nl,
+write('4- ') , nl, board7(D), printBoard(D),nl,
+write('5- ') , nl, board8(E), printBoard(E),nl.
+
+pickBoard:- 
+	showAllBoards,
+	user_input(Input),
+	handle_input_boarder_menu(Input).
+
+
+
+
+handle_input_boarder_menu(1):- nl, write('Chosen Board: '), nl, board4(B), middle_sum(B).
+handle_input_boarder_menu(2):- nl, write('Chosen Board: '), nl, board5(B), middle_sum(B).
+handle_input_boarder_menu(3):- nl, write('Chosen Board: '), nl, board6(B), middle_sum(B).
+handle_input_boarder_menu(4):- nl, write('Chosen Board: '), nl, board7(B), middle_sum(B).
+handle_input_boarder_menu(5):- nl, write('Chosen Board: '), nl, board8(B), middle_sum(B).
+handle_input_boarder_menu(0):- main_menu.
+handle_input_boarder_menu(_):- nl, write('ATTENTION!!\nChoose a number between 0 and 5'),nl,nl, pickBoard.
+
+handle_input(1):- random_menu.
 handle_input(2):- !, write('Board: '), nl, read(Board), middle_sum(Board).
+handle_input(3):- nl, write('Choose a Board'), pickBoard.
 handle_input(0):- write('Exit').
+handle_input(_):- nl, write('ATTENTION!!\nChoose a number between 0 and 3'),nl,nl, main_menu.
+
+handle_input_random_menu(1):- !, generate_random_puzzle(Board, Solved),nl, print_board(Board), nl, printSolution(Solved).
+handle_input_random_menu(2):- !, selectBoardSize(Number), generate_random_puzzle(Number, Board, Solved), nl, print_board(Board), nl, printSolution(Solved).
+handle_input_random_menu(0):- main_menu.
+handle_input_random_menu(_):-  nl, write('ATTENTION!!\nChoose a number between 0 and 2'),nl,nl, random_menu.
 
 
+selectBoardSize(Number):-
+	insertInteger(Number),nl,nl, write('Board Size: ') , write(Number), nl,nl. 
+
+print_board(Board):-
+	write('> Puzzle: '),nl,
+	printBoard(Board).
+
+printSolution(Board):- 
+write('> Solution: '), nl,nl,
+printBoard(Board).
 
 user_input(Input):-
 	write('> Option: '), nl,
-	read(Input).
+	read(Tmp),
+	integer(Tmp), 
+	Tmp > -1,
+	Input is Tmp.
+
+user_input(Input):-
+	write('Choose a valid option'), nl,
+	user_input(Input).
+
+insertInteger(Input):-
+	write('> Board Size: '), nl,
+	read(N),
+	integer(N),
+	N > -1,
+	Input is N.
+
+insertInteger(Input):-
+	nl, write('Write a valid number higher than 3'), nl,
+	insertInteger(Input).
+
+reload:-consult('menus.pl').

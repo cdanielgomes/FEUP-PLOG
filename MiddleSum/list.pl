@@ -93,10 +93,11 @@ middle_sum_matrix(Matrix, Vars):-
 	middle_sum_lists(AuxMatrix1,B),
 	transpose(A,B),
 	flatten(A, Vars),
-	domain(Vars, 0, 9),
-	reset_timer,
-	labeling([min], Vars),
-	print_time.
+	domain(Vars, 0, 9),!,
+	%%reset_timer,!,
+	labeling([min], Vars).
+%%	print_time.\
+
 
 reset_timer :- statistics(walltime, _).
 print_time :-

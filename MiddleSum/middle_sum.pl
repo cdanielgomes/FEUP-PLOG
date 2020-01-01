@@ -2,12 +2,12 @@
 :- include('display.pl').
 
 middle_sum(Board):-
-	printBoard(Board),
+	printBoard(Board),nl,
 	write('Solving....'), nl, nl,
 	middle_sum_matrix(Board, Vars),
 	length(Board, L),
 	list2matrix(Vars, L, Solved),
-	printBoard(Solved),
+	printBoard(Solved),nl,nl,
 	main_menu.
 
 middle_sum_test(Board):-
