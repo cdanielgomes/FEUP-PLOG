@@ -14,18 +14,11 @@ randomNumber(L, N, R) :-
     N1 is N+1,
     random(L, N1, R).
 
-
-generate_random_indexes(Size, Size, TmpIndex, TmpIndex).
-
-generate_random_indexes(Size, Counter, TmpIndex, Final) :-
-    randomNumber(Size, Index),
-    \+ member(Index, TmpIndex),
-    Counter1 is Counter+1,
-    append(TmpIndex, [Index], NewTmp),
-    generate_random_indexes(Size, Counter1, NewTmp, Final).
-
-generate_random_indexes(Size, Counter, TmpIndex, Final) :-
-    generate_random_indexes(Size, Counter, TmpIndex, Final).
+get_ordered_list(Size, List) :-
+    length(List, Size),
+    domain(List, 1, Size),
+    all_distinct(List),
+    labeling([], List).
 
 
 
@@ -46,26 +39,29 @@ fill_line(Counter, Size, [M|K], Index) :-
     Counter1 is Counter+1,
     fill_line(Counter1, Size, K, Index).
 
-
 fill_matrix(S, S, _, []).
 
-fill_matrix(Counter, Size, [H|T], [F|N]) :-
-    fill_line(1, Size, H, F),
+fill_matrix(Counter, Size, [H|T], Indexes):-
+    random_select(Index, Indexes, Rest),
+    fill_line(1, Size, H, Index),
     Counter1 is Counter+1,
-    fill_matrix(Counter1, Size, T, N).
+    fill_matrix(Counter1, Size, T, Rest).
+    
 
-fill_matrix(Size, M) :-
-    generate_matrix(Size, Size, M),
-    generate_random_indexes(Size, 0, [], Final),
-    fill_matrix(0, Size, M, Final).
+fill_matrix(Size, M):-
+    generate_matrix(Size, Size, M), 
+    get_ordered_list(Size, List),
+    fill_matrix(0, Size, M, List).
+    
+
 
 generate_random_puzzle(Board, Solved) :-
     randomNumber(4, 15, N),
     nl,
     write('Board Size: '),
     write(N),nl,
-    fill_matrix(N, Board),
-    middle_sum_matrix(Board, Vars), 
+    fill_matrix(N, Board), 
+    middle_sum_matrix(Board, Vars),
     list2matrix(Vars, N, Solved). 
 
 

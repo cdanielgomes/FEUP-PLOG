@@ -37,7 +37,6 @@ random_menu:-
 	user_input(Input),
 	handle_input_random_menu(Input).
 
-
 showAllBoards:- nl,nl,
 write('0- Back'), nl,nl,
 write('1- ') , nl, board4(A), printBoard(A),nl,
@@ -68,8 +67,8 @@ handle_input(3):- nl, write('Choose a Board'), pickBoard.
 handle_input(0):- write('Exit').
 handle_input(_):- nl, write('ATTENTION!!\nChoose a number between 0 and 3'),nl,nl, main_menu.
 
-handle_input_random_menu(1):- !, generate_random_puzzle(Board, Solved),nl, print_board(Board), nl, printSolution(Solved).
-handle_input_random_menu(2):- !, selectBoardSize(Number), generate_random_puzzle(Number, Board, Solved), nl, print_board(Board), nl, printSolution(Solved).
+handle_input_random_menu(1):- !, generate_random_puzzle(Board, Solved),nl, print_board(Board), nl, printSolution(Solved), random_menu.
+handle_input_random_menu(2):- !, selectBoardSize(Number), generate_random_puzzle(Number, Board, Solved), nl, print_board(Board), nl, printSolution(Solved),random_menu.
 handle_input_random_menu(0):- main_menu.
 handle_input_random_menu(_):-  nl, write('ATTENTION!!\nChoose a number between 0 and 2'),nl,nl, random_menu.
 
@@ -78,12 +77,12 @@ selectBoardSize(Number):-
 	insertInteger(Number),nl,nl, write('Board Size: ') , write(Number), nl,nl. 
 
 print_board(Board):-
-	write('> Puzzle: '),nl,
-	printBoard(Board).
+	write('> Puzzle: '),nl,nl,
+	displayB(Board).
 
 printSolution(Board):- 
 write('> Solution: '), nl,nl,
-printBoard(Board).
+displayB(Board).
 
 user_input(Input):-
 	write('> Option: '), nl,
