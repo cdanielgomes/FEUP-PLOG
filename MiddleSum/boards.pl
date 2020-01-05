@@ -1,3 +1,9 @@
+/**
+ * Testing purpose
+ *  user can pick one of these in the menu
+ * 
+ */
+
 board4(Board):- Board = [[0,0,0,2],
 [0,9,0,0],
 [7,0,0,0],
