@@ -94,9 +94,7 @@ middle_sum_matrix(Matrix, Vars):-
 	transpose(A,B),
 	flatten(A, Vars),
 	domain(Vars, 0, 9),!,
-	%%reset_timer,!,
 	labeling([min], Vars).
-%%	print_time.\
 
 
 reset_timer :- statistics(walltime, _).

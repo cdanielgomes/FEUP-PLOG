@@ -7,8 +7,7 @@ middle_sum(Board):-
 	middle_sum_matrix(Board, Vars),
 	length(Board, L),
 	list2matrix(Vars, L, Solved),
-	displayB(Solved),nl,nl,
-	main_menu.
+	displayB(Solved),nl,nl.
 
 middle_sum_test(Board):-
 	displayB(Board),
