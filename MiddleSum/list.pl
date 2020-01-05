@@ -94,14 +94,17 @@ middle_sum_matrix(Matrix, Vars):-
 	transpose(A,B),
 	flatten(A, Vars),
 	domain(Vars, 0, 9),!,
-	labeling([min], Vars).
+	reset_timer,
+	labeling([ff], Vars),
+	print_time, 
+	fd_statistics.
 
 
 reset_timer :- statistics(walltime, _).
 print_time :-
   statistics(walltime, [_,T]),
   TS is ((T//10)*10)/1000,
-  nl, format('Time: ~10fs ~n~n', [TS]).
+   format('Time: ~10fs ~n~n', [TS]).
 
 
 /** 
